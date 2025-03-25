@@ -107,5 +107,4 @@ Implement a **stack-based system** for evaluating arithmetic expressions.
 ✅ **Memory safety** – Handle memory leaks properly (use destructors).  
 ✅ **Edge cases** – Handle empty inputs, invalid operations, and duplicates.
 
-📅 **Deadline: March 28, 2025**  
-Would you like code snippets for any of these? 🚀
+---
