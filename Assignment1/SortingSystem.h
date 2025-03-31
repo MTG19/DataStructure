@@ -34,6 +34,10 @@ public:
     void measureSortTime(void (SortingSystem::*sortFunc)()); // Measure sorting time
 
     void showMenu(); // Display menu for user interaction
+
+    T& getDataAt(int index) {
+        return data[index];
+    }
 };
 
 #endif //SORTINGSYSTEM_H
