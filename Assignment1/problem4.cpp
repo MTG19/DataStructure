@@ -406,42 +406,28 @@ void swap(T* a, T* b) {
 }
 //_____________________________________________________________________________________
 // Helper functions for integer validation
-
 static bool isInteger(const string& s) {
     if (s.empty()) return false;
 
     size_t i = 0;
-    if (s[0] == '-' || s[0] == '+') i++;
+    if (s[0] == '-' || s[0] == '+') i++;  // Skip the optional sign at the beginning.
 
+    // Check if all characters after the sign (if any) are digits
     for (; i < s.size(); i++) {
-        if (!isdigit(s[i])) return false;
+        if (s[i] < '0' || s[i] > '9') return false;  // Check if the character is a digit
     }
-    return true;
+
+    return true;  // The string is an integer if all characters are digits (after the optional sign).
 }
 
+// Helper function to check if all elements are integers in the sorter
 template <typename T>
 bool allIntegers(SortingSystem<T>* sorter, int known_size) {
-    // Create a stringstream from the displayed data
-    stringstream buffer;
-    streambuf* old = cout.rdbuf(buffer.rdbuf());
-    sorter->displayData();
-    cout.rdbuf(old);
-
-    string displayed_data = buffer.str();
-    size_t pos = displayed_data.find('[') + 1;
-    size_t end_pos = displayed_data.find(']');
-    string content = displayed_data.substr(pos, end_pos - pos);
-
-    // Split content by commas and check each element
-    size_t comma_pos = 0;
-    while ((comma_pos = content.find(',')) != string::npos) {
-        string element = content.substr(0, comma_pos);
-        content.erase(0, comma_pos + 2); // Skip comma and space
-        if (!isInteger(element)) return false;
+    for (int i = 0; i < known_size; i++) {
+        if (!isInteger(sorter->getDataAt(i))) {
+            return false;
+        }
     }
-    // Check last element
-    if (!content.empty() && !isInteger(content)) return false;
-
     return true;
 }
 
@@ -536,16 +522,18 @@ int main() {
 
         //display menu
         sorter->showMenu();
-        while (!(cin >> choice) || choice < 1 || choice > 9)
-        {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "\nInvalid choice! Please enter a number between 1 and 9: ";
-        }
+        while (!(cin >> choice) || choice < 1 || choice > 9 || ((choice == 7 || choice == 8) && !allIntegers(sorter, size))) {
 
-        if ((choice == 7 || choice == 8) && !allIntegers(sorter, size)) {
-            cout << "\nCount Sort and Radix Sort are only for integers!\n"
-                 << "Please choose another sorting algorithm.\n";
+            if (choice==7 || choice==8) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "\nCount Sort and Radix Sort are only for integers!\n"
+                       "Please choose another sorting algorithm : ";
+            }else {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "\nInvalid choice! Please enter 1-9: ";
+            }
         }
 
 
