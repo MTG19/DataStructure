@@ -121,7 +121,7 @@ void SortingSystem<T>::bubbleSort() {
 //_____________________________________________________________________________________
 // Shell Sort
 template <typename T>
-void SortingSystem<T>::shellsSort() {
+void SortingSystem<T>::shellSort() {
     cout<<"\nSorting using Shell Sort...\n";
     cout<<"Initial Data: ";
     displayData();
@@ -278,37 +278,7 @@ void SortingSystem<T>::radixSort() {
     displayData();
     cout<<"\n";
 
-    vector<int> arr;
-    for (int i = 0; i < size; i++) {
-        arr.push_back(stoi(data[i]));
-    }
-
-    int maxVal = *max_element(arr.begin(), arr.end());
-
-    for (int exp = 1; maxVal / exp > 0; exp *= 10) {
-        vector<int> output(arr.size());
-        int count[10] = {0};
-
-        for (int i = 0; i < arr.size(); i++) {
-            count[(arr[i] / exp) % 10]++;
-        }
-
-        for (int i = 1; i < 10; i++) {
-            count[i] += count[i - 1];
-        }
-
-        for (int i = arr.size() - 1; i >= 0; i--) {
-            int digit = (arr[i] / exp) % 10;
-            output[count[digit] - 1] = arr[i];
-            count[digit]--;
-        }
-
-        arr = output;
-    }
-
-    for (int i = 0; i < size; i++) {
-        data[i] = to_string(arr[i]);
-    }
+    // implement the radix sort function here (for Radix Sort)
 
     cout << "\nSorted Data: ";
     displayData();
@@ -323,47 +293,7 @@ void SortingSystem<T>::bucketSort() {
     displayData();
     cout<<"\n";
 
-    vector<int> arr;
-    for (int i = 0; i < size; i++) {
-        arr.push_back(stoi(data[i]));
-    }
-
-    int minVal = *min_element(arr.begin(), arr.end());
-    int maxVal = *max_element(arr.begin(), arr.end());
-
-    int bucketCount = size;
-    int bucketRange = (maxVal - minVal) / bucketCount + 1;
-
-    vector<vector<int>> buckets(bucketCount);
-
-    for (int i = 0; i < arr.size(); i++) {
-        int bucketIndex = (arr[i] - minVal) / bucketRange;
-        buckets[bucketIndex].push_back(arr[i]);
-    }
-
-    for (int i = 0; i < bucketCount; i++) {
-        for (int j = 1; j < buckets[i].size(); j++) {
-            int key = buckets[i][j];
-            int k = j - 1;
-            while (k >= 0 && buckets[i][k] > key) {
-                buckets[i][k + 1] = buckets[i][k];
-                k--;
-            }
-            buckets[i][k + 1] = key;
-        }
-    }
-
-    vector<int> sortedArr;
-    for (int i = 0; i < bucketCount; i++) {
-        for (int j = 0; j < buckets[i].size(); j++) {
-            sortedArr.push_back(buckets[i][j]);
-        }
-    }
-
-    for (int i = 0; i < size; i++) {
-        data[i] = to_string(sortedArr[i]);
-    }
-
+    // implement the bucket sort function here (for Bucket Sort)
 
     cout << "\nSorted Data: ";
     displayData();
@@ -373,14 +303,14 @@ void SortingSystem<T>::bucketSort() {
 // Helper function to display data
 template <typename T>
 void SortingSystem<T>::displayData() {
-    cout<<"[";
+    cout << "[";
     for (int i = 0; i < size; i++) {
         cout << data[i];
         if (i < size - 1) {
-            cout<<", ";
+            cout << ", ";
         }
     }
-    cout<<"]\n";
+    cout << "]\n";
 }
 
 //_____________________________________________________________________________________
@@ -430,6 +360,46 @@ bool allIntegers(SortingSystem<T>* sorter, int known_size) {
     }
     return true;
 }
+//_____________________________________________________________________________________
+// Enum for data types
+enum DataType { INTEGER, FLOAT, STRING };
+
+// Helper function to check if a string is a float
+bool isFloat(const string& s) {
+    if (s.empty()) return false;
+    size_t i = 0;
+    bool decimalFound = false;
+    if (s[0] == '-' || s[0] == '+') i++;
+
+    for (; i < s.size(); i++) {
+        if (s[i] == '.') {
+            if (decimalFound) return false;
+            decimalFound = true;
+        } else if (s[i] < '0' || s[i] > '9') {
+            return false;
+        }
+    }
+    return decimalFound; // Must have a decimal point to be float
+}
+
+// Function to convert string to appropriate type
+template <typename T>
+T convertToType(const string& s);
+
+template <>
+int convertToType<int>(const string& s) {
+    return stoi(s);
+}
+
+template <>
+float convertToType<float>(const string& s) {
+    return stof(s);
+}
+
+template <>
+string convertToType<string>(const string& s) {
+    return s;
+}
 
 //_____________________________________________________________________________________
 // Show menu
@@ -459,8 +429,10 @@ int main() {
     // Main menu loop
     int choice;
     char repeat;
-    int size;
+    int size=0;
     int input;
+    int typeChoice;
+    DataType dataType;
 
     do {
 
@@ -471,7 +443,25 @@ int main() {
             cout << "Please enter a valid choice (1 or 2): ";
         }
 
-        SortingSystem<string>* sorter = nullptr;
+        // Ask for data type first
+        cout << "\nSelect data type:\n";
+        cout << "1. Integer\n";
+        cout << "2. Float\n";
+        cout << "3. String\n";
+        cout << "Enter your choice (1-3): ";
+
+        while (!(cin >> typeChoice) || typeChoice < 1 || typeChoice > 3) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid choice! Please enter 1-3: ";
+        }
+
+        dataType = static_cast<DataType>(typeChoice - 1);
+
+        // Create appropriate sorter based on data type
+        void* sorter = nullptr;
+        bool validInput = true;
+        string* stringData = nullptr; // initialize to nullptr
 
         if (input == 1) {
             // Manual input
@@ -481,10 +471,23 @@ int main() {
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Invalid size! Enter a positive integer: ";
             }
-            sorter = new SortingSystem<string>(size);
+            stringData = new string[size];
             cout << "Enter elements: ";
             for (int i = 0; i < size; i++) {
-                cin >> sorter->getDataAt(i);
+                cin >> stringData[i];
+
+                // Validate input type
+                if (dataType == INTEGER && !isInteger(stringData[i])) {
+                    cout << "Error: '" << stringData[i] << "' is not an integer!\n"
+                                                           "Please choose correct choices and enter valid data again.\n";
+                    validInput = false;
+                    break;
+                } else if (dataType == FLOAT && !isFloat(stringData[i])) {
+                    cout << "Error: '" << stringData[i] << "' is not a float!\n"
+                                                           "Please choose correct choices and enter valid data again.\n";
+                    validInput = false;
+                    break;
+                }
             }
         } else {
             // File input
@@ -502,54 +505,142 @@ int main() {
                 cout << "Error reading size from file!\n";
                 return 1;
             }
-
-            sorter = new SortingSystem<string>(size);
-            string element;
+            stringData = new string[size];
             for (int i = 0; i < size; i++) {
-                if (!(inputFile >> element)) {
+                if (!(inputFile >> stringData[i])) {
                     cout << "Error reading data from file!\n";
-                    delete sorter;
-                    return 1;
+                    validInput = false;
+                    break;
                 }
-                sorter->setDataAt(i, element);
+
+                // Validate input type
+                if (dataType == INTEGER && !isInteger(stringData[i])) {
+                    cout << "Error: '" << stringData[i] << "' is not an integer!\n"
+                                                           "Please choose correct choices and enter valid data again.\n";
+                    validInput = false;
+                    break ;
+                } else if (dataType == FLOAT && !isFloat(stringData[i])) {
+                    cout << "Error: '" << stringData[i] << "' is not a float!\n"
+                                                           "Please choose correct choices and enter valid data again.\n";
+                    validInput = false;
+                    break ;
+                }
             }
             inputFile.close();
         }
 
-        // Show initial data
-        cout<<"\nInitial Data: ";
-        sorter->displayData();
+        if (!validInput) {
+            delete[] stringData;
+            continue; // restart the loop if input is invalid
+        }
 
-        //display menu
-        sorter->showMenu();
-        while (!(cin >> choice) || choice < 1 || choice > 9 || ((choice == 7 || choice == 8) && !allIntegers(sorter, size))) {
+        // Create the appropriate sorter and populate with data
+        switch (dataType) {
+            case INTEGER: {
+                SortingSystem<int>* intSorter = new SortingSystem<int>(size);
+                for (int i = 0; i < size; i++) {
+                    intSorter->getDataAt(i) = convertToType<int>(stringData[i]);
+                }
+                sorter = intSorter;
 
-            if (choice==7 || choice==8) {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "\nCount Sort and Radix Sort are only for integers!\n"
-                       "Please choose another sorting algorithm : ";
-            }else {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "\nInvalid choice! Please enter 1-9: ";
+                cout << "\nInitial Data: ";
+                intSorter->displayData();
+                intSorter->showMenu();
+
+                while (!(cin >> choice) || choice < 1 || choice > 9) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "\nInvalid choice! Please enter 1-9: ";
+                }
+
+                switch (choice) {
+                    case 1: intSorter->measureSortTime(&SortingSystem<int>::insertionSort); break;
+                    case 2: intSorter->measureSortTime(&SortingSystem<int>::selectionSort); break;
+                    case 3: intSorter->measureSortTime(&SortingSystem<int>::bubbleSort); break;
+                    case 4: intSorter->measureSortTime(&SortingSystem<int>::shellSort); break;
+                    case 5: intSorter->mergeSort(0, size - 1); break;
+                    case 6: intSorter->quickSort(0, size - 1); break;
+                    case 7: intSorter->measureSortTime(&SortingSystem<int>::countSort); break;
+                    case 8: intSorter->measureSortTime(&SortingSystem<int>::radixSort); break;
+                    case 9: intSorter->measureSortTime(&SortingSystem<int>::bucketSort); break;
+                }
+                delete intSorter;
+                break;
+            }
+            case FLOAT: {
+                SortingSystem<float>* floatSorter = new SortingSystem<float>(size);
+                for (int i = 0; i < size; i++) {
+                    floatSorter->getDataAt(i) = convertToType<float>(stringData[i]);
+                }
+                sorter = floatSorter;
+
+                cout << "\nInitial Data: ";
+                floatSorter->displayData();
+                floatSorter->showMenu();
+
+                while (!(cin >> choice) || choice < 1 || choice > 9 || choice == 7 || choice == 8) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    if (choice == 7 || choice == 8) {
+                        cout << "\nCount Sort and Radix Sort work only with integers!\n"
+                             << "Please choose another sorting algorithm: ";
+                    } else {
+                        cout << "\nInvalid choice! Please enter 1-9: ";
+                    }
+                }
+
+                switch (choice) {
+                    case 1: floatSorter->measureSortTime(&SortingSystem<float>::insertionSort); break;
+                    case 2: floatSorter->measureSortTime(&SortingSystem<float>::selectionSort); break;
+                    case 3: floatSorter->measureSortTime(&SortingSystem<float>::bubbleSort); break;
+                    case 4: floatSorter->measureSortTime(&SortingSystem<float>::shellSort); break;
+                    case 5: floatSorter->mergeSort(0, size - 1); break;
+                    case 6: floatSorter->quickSort(0, size - 1); break;
+                    case 9: floatSorter->measureSortTime(&SortingSystem<float>::bucketSort); break;
+                    default: break;
+                }
+                delete floatSorter;
+                break;
+            }
+            case STRING: {
+                SortingSystem<string>* stringSorter = new SortingSystem<string>(size);
+                for (int i = 0; i < size; i++) {
+                    stringSorter->getDataAt(i) = stringData[i];
+                }
+                sorter = stringSorter;
+
+                cout << "\nInitial Data: ";
+                stringSorter->displayData();
+                stringSorter->showMenu();
+
+                while (!(cin >> choice) || choice < 1 || choice > 9 || choice == 7 || choice == 8) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    if (choice == 7 || choice == 8) {
+                        cout << "\nCount Sort and Radix Sort work only with integers!\n"
+                             << "Please choose another sorting algorithm: ";
+                    } else {
+                        cout << "\nInvalid choice! Please enter 1-9: ";
+                    }
+                }
+
+                switch (choice) {
+                    case 1: stringSorter->measureSortTime(&SortingSystem<string>::insertionSort); break;
+                    case 2: stringSorter->measureSortTime(&SortingSystem<string>::selectionSort); break;
+                    case 3: stringSorter->measureSortTime(&SortingSystem<string>::bubbleSort); break;
+                    case 4: stringSorter->measureSortTime(&SortingSystem<string>::shellSort); break;
+                    case 5: stringSorter->mergeSort(0, size - 1); break;
+                    case 6: stringSorter->quickSort(0, size - 1); break;
+                    case 9: stringSorter->measureSortTime(&SortingSystem<string>::bucketSort); break;
+                    default: break;
+                }
+                delete stringSorter;
+                break;
             }
         }
 
+        delete[] stringData;
 
-        switch (choice) {
-            case 1: sorter->measureSortTime(&SortingSystem<string>::insertionSort); break;
-            case 2: sorter->measureSortTime(&SortingSystem<string>::selectionSort); break;
-            case 3: sorter->measureSortTime(&SortingSystem<string>::bubbleSort); break;
-            case 4: sorter->measureSortTime(&SortingSystem<string>::shellsSort); break;
-            case 5: sorter->mergeSort(0, size - 1); break;
-            case 6: sorter->quickSort(0, size - 1); break;
-            case 7: sorter->measureSortTime(&SortingSystem<string>::countSort); break;
-            case 8: sorter->measureSortTime(&SortingSystem<string>::radixSort); break;
-            case 9: sorter->measureSortTime(&SortingSystem<string>::bucketSort); break;
-        }
-
-        delete sorter;
         cout << "\nDo you want to sort another dataset? (1 = Yes, 2 = No): ";
         while (!(cin >> repeat) || (repeat != '1' && repeat != '2')) {
             cin.clear();
