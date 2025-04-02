@@ -1,9 +1,10 @@
 #include "SortingSystem.h"
 #include <cstdio>
 #include <fstream>   // Include the file stream library for file handling
-#include <ctime>
 #include <limits>    // Include the limits library for handling input validation
 #include <iomanip>  // for setprecision
+#include <chrono>
+using namespace chrono;
 
 // Constructor
 template <typename T>
@@ -26,8 +27,6 @@ void SortingSystem<T>::insertionSort() {
     displayData();
     cout<<"\n";
 
-    clock_t start = clock();
-
     for (int i = 1; i < size; i++) {
         T key = data[i];
         int j = i - 1;
@@ -44,12 +43,8 @@ void SortingSystem<T>::insertionSort() {
         displayData();
     }
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
-
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -60,8 +55,6 @@ void SortingSystem<T>::selectionSort() {
     cout<<"Initial Data: ";
     displayData();
     cout<<"\n";
-
-    clock_t start = clock();
 
     for (int i = 0; i < size - 1; i++) {
         int min_idx = i;
@@ -83,12 +76,8 @@ void SortingSystem<T>::selectionSort() {
         displayData();
     }
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
-
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -99,8 +88,6 @@ void SortingSystem<T>::bubbleSort() {
     cout<<"Initial Data: ";
     displayData();
     cout<<"\n";
-
-    clock_t start = clock();
 
     for (int i = 0; i < size - 1; i++) {
         bool swapped = false;
@@ -124,12 +111,8 @@ void SortingSystem<T>::bubbleSort() {
         if (!swapped) break;
     }
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
-
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -141,16 +124,11 @@ void SortingSystem<T>::shellSort() {
     displayData();
     cout<<"\n";
 
-    clock_t start = clock();
-
     // implement the shell sort function here (for Shell Sort)
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
 
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -161,17 +139,16 @@ void SortingSystem<T>::mergeSort(int left, int right) {
     cout<<"Initial Data: ";
     displayData();
     cout<<"\n";
-
-    clock_t start = clock();
+    auto start = chrono::high_resolution_clock::now();
 
     // implement the merge sort function here (for Merge Sort)
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
-
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
+
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Sorting Time: " << fixed << setprecision(5) << duration.count() << " seconds\n";
 }
 
 // Merge helper function (for Merge Sort)
@@ -190,17 +167,16 @@ void SortingSystem<T>::quickSort(int low, int high) {
     cout<<"Initial Data: ";
     displayData();
     cout<<"\n";
-
-    clock_t start = clock();
+    auto start = chrono::high_resolution_clock::now();
 
     // implement the quick sort function here (for Quick Sort)
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
-
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
+
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = end - start;
+    cout << "Sorting Time: " << fixed << setprecision(5) << duration.count() << " seconds\n";
 }
 
 // Partition helper function (for Quick Sort)
@@ -221,16 +197,10 @@ void SortingSystem<T>::countSort() {
     displayData();
     cout<<"\n";
 
-    clock_t start = clock();
-
     // implement the count sort function here (for Count Sort)
-
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
 
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -242,16 +212,10 @@ void SortingSystem<T>::radixSort() {
     displayData();
     cout<<"\n";
 
-    clock_t start = clock();
-
     // implement the radix sort function here (for Radix Sort)
-
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
 
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -263,16 +227,10 @@ void SortingSystem<T>::bucketSort() {
     displayData();
     cout<<"\n";
 
-    clock_t start = clock();
-
     // implement the bucket sort function here (for Bucket Sort)
-
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
 
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -290,15 +248,16 @@ void SortingSystem<T>::displayData() {
 }
 
 //_____________________________________________________________________________________
-// Helper function to measure sort time
-template <typename T>
+// Implement measureSortTime using chrono
+template<typename T>
 void SortingSystem<T>::measureSortTime(void (SortingSystem::*sortFunc)()) {
-    clock_t start = clock();
+    auto start = high_resolution_clock::now();
     (this->*sortFunc)();
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
+    auto end = high_resolution_clock::now();
+
+    duration<double> duration = end - start;
     cout << fixed << setprecision(5);
-    cout << "Execution Time: " << duration << " seconds\n";
+    cout << "Sorting Time: " << duration.count() << " seconds\n";
 }
 
 //_____________________________________________________________________________________
@@ -308,6 +267,46 @@ void swap(T* a, T* b) {
     T temp = *a;
     *a = *b;
     *b = temp;
+}
+//_____________________________________________________________________________________
+// Helper functions for integer validation
+
+static bool isInteger(const string& s) {
+    if (s.empty()) return false;
+
+    size_t i = 0;
+    if (s[0] == '-' || s[0] == '+') i++;
+
+    for (; i < s.size(); i++) {
+        if (!isdigit(s[i])) return false;
+    }
+    return true;
+}
+
+template <typename T>
+bool allIntegers(SortingSystem<T>* sorter, int known_size) {
+    // Create a stringstream from the displayed data
+    stringstream buffer;
+    streambuf* old = cout.rdbuf(buffer.rdbuf());
+    sorter->displayData();
+    cout.rdbuf(old);
+
+    string displayed_data = buffer.str();
+    size_t pos = displayed_data.find('[') + 1;
+    size_t end_pos = displayed_data.find(']');
+    string content = displayed_data.substr(pos, end_pos - pos);
+
+    // Split content by commas and check each element
+    size_t comma_pos = 0;
+    while ((comma_pos = content.find(',')) != string::npos) {
+        string element = content.substr(0, comma_pos);
+        content.erase(0, comma_pos + 2); // Skip comma and space
+        if (!isInteger(element)) return false;
+    }
+    // Check last element
+    if (!content.empty() && !isInteger(content)) return false;
+
+    return true;
 }
 
 //_____________________________________________________________________________________
@@ -326,9 +325,6 @@ void SortingSystem<T>::showMenu() {
     cout<<"9. Bucket Sort\n";
     cout<<"Enter your choice (1-9): ";
 }
-
-// Explicit template instantiation for int
-template class SortingSystem<int>;
 
 //_____________________________________________________________________________________
 
@@ -353,7 +349,7 @@ int main() {
             cout << "Please enter a valid choice (1 or 2): ";
         }
 
-        SortingSystem<int>* sorter = nullptr;
+        SortingSystem<string>* sorter = nullptr;
 
         if (input == 1) {
             // Manual input
@@ -363,14 +359,10 @@ int main() {
                 cin.ignore(numeric_limits<streamsize>::max(), '\n');
                 cout << "Invalid size! Enter a positive integer: ";
             }
-            sorter = new SortingSystem<int>(size);
+            sorter = new SortingSystem<string>(size);
             cout << "Enter elements: ";
             for (int i = 0; i < size; i++) {
-                while (!(cin >> sorter->getDataAt(i))) {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "Invalid input! Enter an integer: ";
-                }
+                cin >> sorter->getDataAt(i);
             }
         } else {
             // File input
@@ -389,39 +381,51 @@ int main() {
                 return 1;
             }
 
-            sorter = new SortingSystem<int>(size);
+            sorter = new SortingSystem<string>(size);
+            string element;
             for (int i = 0; i < size; i++) {
-                if (!(inputFile >> sorter->getDataAt(i))) {
+                if (!(inputFile >> element)) {
                     cout << "Error reading data from file!\n";
                     delete sorter;
                     return 1;
                 }
+                sorter->setDataAt(i, element);
             }
             inputFile.close();
         }
 
         // Show initial data
         cout<<"\nInitial Data: ";
+        sorter->displayData();
 
         //display menu
-        sorter->displayData();
         sorter->showMenu();
-        while (!(cin >> choice) || choice < 1 || choice > 9) {
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "Invalid choice! Please enter 1-9: ";
+        while (!(cin >> choice) || choice < 1 || choice > 9 || (choice==7) || (choice==8)) {
+
+            if (choice==7 || choice==8) {
+                if (!allIntegers(sorter, size)) {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                    cout << "\nCount Sort and Radix Sort are only for integers!\n"
+                           "Please choose another sorting algorithm : ";
+                }
+            }else {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cout << "\nInvalid choice! Please enter 1-9: ";
+            }
         }
 
         switch (choice) {
-            case 1: sorter->insertionSort(); break;
-            case 2: sorter->selectionSort(); break;
-            case 3: sorter->bubbleSort(); break;
-            case 4: sorter->shellSort(); break;
+            case 1: sorter->measureSortTime(&SortingSystem<string>::insertionSort); break;
+            case 2: sorter->measureSortTime(&SortingSystem<string>::selectionSort); break;
+            case 3: sorter->measureSortTime(&SortingSystem<string>::bubbleSort); break;
+            case 4: sorter->measureSortTime(&SortingSystem<string>::shellSort); break;
             case 5: sorter->mergeSort(0, size - 1); break;
             case 6: sorter->quickSort(0, size - 1); break;
-            case 7: sorter->countSort(); break;
-            case 8: sorter->radixSort(); break;
-            case 9: sorter->bucketSort(); break;
+            case 7: sorter->measureSortTime(&SortingSystem<string>::countSort); break;
+            case 8: sorter->measureSortTime(&SortingSystem<string>::radixSort); break;
+            case 9: sorter->measureSortTime(&SortingSystem<string>::bucketSort); break;
         }
 
         delete sorter;
@@ -437,4 +441,3 @@ int main() {
 
     return 0;
 }
-

@@ -38,6 +38,10 @@ public:
     T& getDataAt(int index) {
         return data[index];
     }
+    T& setDataAt(int index , const T& value) {
+        data[index] = value;
+        return data[index];
+    }
 };
 
 #endif //SORTINGSYSTEM_H
