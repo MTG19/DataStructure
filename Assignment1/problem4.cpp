@@ -4,6 +4,9 @@
 #include <limits>    // Include the limits library for handling input validation
 #include <iomanip>  // for setprecision
 #include <chrono>
+#include <string>
+#include <vector>
+#include <algorithm>
 using namespace chrono;
 
 // Constructor
@@ -124,7 +127,7 @@ void SortingSystem<T>::shellSort() {
     displayData();
     cout<<"\n";
 
-    //Shell Sort implementation
+    // Shell Sort implementation
     for (int gap = size / 2; gap > 0; gap /= 2) {     //To reduce the gap in each iteration
         for (int i = gap; i < size; i++) {      //Traverse elements starting from the gap
             T temp = data[i];     //Store the current element
@@ -139,12 +142,12 @@ void SortingSystem<T>::shellSort() {
         displayData();
     }
 
-    clock_t end = clock();
-    double duration = double(end - start) / CLOCKS_PER_SEC;
+    // clock_t end = clock();
+    // double duration = double(end - start) / CLOCKS_PER_SEC;
 
     cout << "\nSorted Data: ";
     displayData();
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
+    // cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
 //_____________________________________________________________________________________
 // Merge Sort
@@ -275,7 +278,37 @@ void SortingSystem<T>::radixSort() {
     displayData();
     cout<<"\n";
 
-    // implement the radix sort function here (for Radix Sort)
+    vector<int> arr;
+    for (int i = 0; i < size; i++) {
+        arr.push_back(stoi(data[i]));
+    }
+
+    int maxVal = *max_element(arr.begin(), arr.end());
+
+    for (int exp = 1; maxVal / exp > 0; exp *= 10) {
+        vector<int> output(arr.size());
+        int count[10] = {0};
+
+        for (int i = 0; i < arr.size(); i++) {
+            count[(arr[i] / exp) % 10]++;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = arr.size() - 1; i >= 0; i--) {
+            int digit = (arr[i] / exp) % 10;
+            output[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+
+        arr = output;
+    }
+
+    for (int i = 0; i < size; i++) {
+        data[i] = to_string(arr[i]);
+    }
 
     cout << "\nSorted Data: ";
     displayData();
@@ -290,7 +323,47 @@ void SortingSystem<T>::bucketSort() {
     displayData();
     cout<<"\n";
 
-    // implement the bucket sort function here (for Bucket Sort)
+    vector<int> arr;
+    for (int i = 0; i < size; i++) {
+        arr.push_back(stoi(data[i]));
+    }
+
+    int minVal = *min_element(arr.begin(), arr.end());
+    int maxVal = *max_element(arr.begin(), arr.end());
+
+    int bucketCount = size;
+    int bucketRange = (maxVal - minVal) / bucketCount + 1;
+
+    vector<vector<int>> buckets(bucketCount);
+
+    for (int i = 0; i < arr.size(); i++) {
+        int bucketIndex = (arr[i] - minVal) / bucketRange;
+        buckets[bucketIndex].push_back(arr[i]);
+    }
+
+    for (int i = 0; i < bucketCount; i++) {
+        for (int j = 1; j < buckets[i].size(); j++) {
+            int key = buckets[i][j];
+            int k = j - 1;
+            while (k >= 0 && buckets[i][k] > key) {
+                buckets[i][k + 1] = buckets[i][k];
+                k--;
+            }
+            buckets[i][k + 1] = key;
+        }
+    }
+
+    vector<int> sortedArr;
+    for (int i = 0; i < bucketCount; i++) {
+        for (int j = 0; j < buckets[i].size(); j++) {
+            sortedArr.push_back(buckets[i][j]);
+        }
+    }
+
+    for (int i = 0; i < size; i++) {
+        data[i] = to_string(sortedArr[i]);
+    }
+
 
     cout << "\nSorted Data: ";
     displayData();
@@ -463,21 +536,18 @@ int main() {
 
         //display menu
         sorter->showMenu();
-        while (!(cin >> choice) || choice < 1 || choice > 9 || (choice==7) || (choice==8)) {
-
-            if (choice==7 || choice==8) {
-                if (!allIntegers(sorter, size)) {
-                    cin.clear();
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    cout << "\nCount Sort and Radix Sort are only for integers!\n"
-                           "Please choose another sorting algorithm : ";
-                }
-            }else {
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                cout << "\nInvalid choice! Please enter 1-9: ";
-            }
+        while (!(cin >> choice) || choice < 1 || choice > 9)
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\nInvalid choice! Please enter a number between 1 and 9: ";
         }
+
+        if ((choice == 7 || choice == 8) && !allIntegers(sorter, size)) {
+            cout << "\nCount Sort and Radix Sort are only for integers!\n"
+                 << "Please choose another sorting algorithm.\n";
+        }
+
 
         switch (choice) {
             case 1: sorter->measureSortTime(&SortingSystem<string>::insertionSort); break;
