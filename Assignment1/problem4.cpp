@@ -441,3 +441,27 @@ int main() {
 
     return 0;
 }
+
+/***
+ Test cases:
+ test case 1 (integers):
+    number of elements: 5
+    elements: 5 3 8 1 7
+    Sorting using Insertion Sort:
+    Sorted Data: [1, 3, 5, 7, 8]
+    Sorting Time: 0.00691 seconds
+_____________________________________________________
+test case 2 (strings):
+    number of elements: 9
+    elements: Nablus, Gaza, Al-Khalil, Ramallah, Ariha, Jenin, Tolkarem, Al-Quds, Yafa
+    Sorting using Selection Sort:
+    Sorted Data: [Al-Khalil, Al-Quds, Ariha, Gaza, Jenin, Nablus, Ramallah, Tolkarem, Yafa]
+    Sorting Time: 0.01955 seconds
+______________________________________________________
+test case 3 (floats):
+    number of elements: 5
+    elements: 0.2 6.0 0.004 5 4.0
+    Sorting using Bubble Sort:
+    Sorted Data: [0.004, 0.2, 4.0, 5, 6.0]
+    Sorting Time: 0.00741 seconds
+ ***/
