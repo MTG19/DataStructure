@@ -124,41 +124,104 @@ void SortingSystem<T>::shellSort() {
     displayData();
     cout<<"\n";
 
-    // implement the shell sort function here (for Shell Sort)
+    //Shell Sort implementation
+    for (int gap = size / 2; gap > 0; gap /= 2) {     //To reduce the gap in each iteration
+        for (int i = gap; i < size; i++) {      //Traverse elements starting from the gap
+            T temp = data[i];     //Store the current element
+            int j;
+            for (j = i; j >= gap && data[j - gap] > temp; j -= gap) {     //Shift earlier gap-sorted elements to their right position
+                data[j] = data[j - gap];
+            }
+            data[j] = temp;     //Put the stored element in its right position
+        }
+        
+        cout << "After gap " << gap << ": ";
+        displayData();
+    }
 
+    clock_t end = clock();
+    double duration = double(end - start) / CLOCKS_PER_SEC;
 
     cout << "\nSorted Data: ";
     displayData();
+    cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
 }
-
 //_____________________________________________________________________________________
 // Merge Sort
 template <typename T>
 void SortingSystem<T>::mergeSort(int left, int right) {
-    cout<<"\nSorting using Merge Sort...\n";
-    cout<<"Initial Data: ";
-    displayData();
-    cout<<"\n";
-    auto start = chrono::high_resolution_clock::now();
+    if (left == 0 && right == size - 1) {
+        cout<<"\nSorting using Merge Sort...\n";
+        cout<<"Initial Data: ";
+        displayData();
+        cout<<"\n";
+    }
+    
+    clock_t start = clock();
 
-    // implement the merge sort function here (for Merge Sort)
+     if (left < right) {
+        int mid = left + (right - left) / 2;     //To find the middle point
+        mergeSort(left, mid);
+        mergeSort(mid + 1, right);
+        merge(left, mid, right);
 
-    cout << "\nSorted Data: ";
-    displayData();
+        cout << "\nAfter merging (" << left << " to " << right << "): ";
+        displayData();
+    }
 
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> duration = end - start;
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration.count() << " seconds\n";
+    if (left == 0 && right == size - 1) {
+        clock_t end = clock();
+        double duration = double(end - start) / CLOCKS_PER_SEC;
+        cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
+    }
 }
 
 // Merge helper function (for Merge Sort)
 template <typename T>
 void SortingSystem<T>::merge(int left, int mid, int right) {
 
-    // implement the merge function here (for Merge Sort)
+    int leftSize = mid - left + 1;
+    int rightSize = right - mid;
 
+    //Temporary arrays
+    T* leftArr = new T[leftSize];
+    T* rightArr = new T[rightSize];
+
+    //To copy data to the temp arrays
+    for (int i = 0; i < leftSize; i++)
+        leftArr[i] = data[left + i];
+    for (int j = 0; j < rightSize; j++)
+        rightArr[j] = data[mid + 1 + j];
+
+    //Merge the temp arrays back
+    int i = 0, j = 0, k = left;
+    while (i < leftSize && j < rightSize) {
+        if (leftArr[i] <= rightArr[j]) {
+            data[k] = leftArr[i];
+            i++;
+        } else {
+            data[k] = rightArr[j];
+            j++;
+        }
+        k++;
+    }
+
+    while (i < leftSize) {     //Copy the rest of the elements of leftArr, if there is
+        data[k] = leftArr[i];
+        i++;
+        k++;
+    }
+
+    while (j < rightSize) {     //Copy the rest of the elements of rightArr, if there is
+        data[k] = rightArr[j];
+        j++;
+        k++;
+    }
+
+    //Free allocated memory
+    delete[] leftArr;
+    delete[] rightArr;
 }
-
 //_____________________________________________________________________________________
 // Quick Sort
 template <typename T>
