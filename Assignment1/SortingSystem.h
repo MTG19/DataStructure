@@ -18,8 +18,6 @@ public:
     void insertionSort(); // (1) Insertion Sort
     void selectionSort(); // (2) Selection Sort
     void bubbleSort(); // (3) Bubble Sort
-    void shellSort();
-
     void shellsSort(); // (4) Shell Sort
     void mergeSort(int left, int right); // (5) Merge Sort
     void quickSort(int left, int right); // (6) Quick Sort

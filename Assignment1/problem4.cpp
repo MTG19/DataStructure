@@ -121,7 +121,7 @@ void SortingSystem<T>::bubbleSort() {
 //_____________________________________________________________________________________
 // Shell Sort
 template <typename T>
-void SortingSystem<T>::shellSort() {
+void SortingSystem<T>::shellsSort() {
     cout<<"\nSorting using Shell Sort...\n";
     cout<<"Initial Data: ";
     displayData();
@@ -137,7 +137,7 @@ void SortingSystem<T>::shellSort() {
             }
             data[j] = temp;     //Put the stored element in its right position
         }
-        
+
         cout << "After gap " << gap << ": ";
         displayData();
     }
@@ -159,7 +159,7 @@ void SortingSystem<T>::mergeSort(int left, int right) {
         displayData();
         cout<<"\n";
     }
-    
+
     clock_t start = clock();
 
      if (left < right) {
@@ -541,7 +541,7 @@ int main() {
             case 1: sorter->measureSortTime(&SortingSystem<string>::insertionSort); break;
             case 2: sorter->measureSortTime(&SortingSystem<string>::selectionSort); break;
             case 3: sorter->measureSortTime(&SortingSystem<string>::bubbleSort); break;
-            case 4: sorter->measureSortTime(&SortingSystem<string>::shellSort); break;
+            case 4: sorter->measureSortTime(&SortingSystem<string>::shellsSort); break;
             case 5: sorter->mergeSort(0, size - 1); break;
             case 6: sorter->quickSort(0, size - 1); break;
             case 7: sorter->measureSortTime(&SortingSystem<string>::countSort); break;
