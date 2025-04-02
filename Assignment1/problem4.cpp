@@ -278,7 +278,37 @@ void SortingSystem<T>::radixSort() {
     displayData();
     cout<<"\n";
 
-    // implement the radix sort function here (for Radix Sort)
+    vector<int> arr;
+    for (int i = 0; i < size; i++) {
+        arr.push_back(stoi(data[i]));
+    }
+
+    int maxVal = *max_element(arr.begin(), arr.end());
+
+    for (int exp = 1; maxVal / exp > 0; exp *= 10) {
+        vector<int> output(arr.size());
+        int count[10] = {0};
+
+        for (int i = 0; i < arr.size(); i++) {
+            count[(arr[i] / exp) % 10]++;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        for (int i = arr.size() - 1; i >= 0; i--) {
+            int digit = (arr[i] / exp) % 10;
+            output[count[digit] - 1] = arr[i];
+            count[digit]--;
+        }
+
+        arr = output;
+    }
+
+    for (int i = 0; i < size; i++) {
+        data[i] = to_string(arr[i]);
+    }
 
     cout << "\nSorted Data: ";
     displayData();
@@ -293,7 +323,46 @@ void SortingSystem<T>::bucketSort() {
     displayData();
     cout<<"\n";
 
-    // implement the bucket sort function here (for Bucket Sort)
+    vector<int> arr;
+    for (int i = 0; i < size; i++) {
+        arr.push_back(stoi(data[i]));
+    }
+
+    int minVal = *min_element(arr.begin(), arr.end());
+    int maxVal = *max_element(arr.begin(), arr.end());
+
+    int bucketCount = size;
+    int bucketRange = (maxVal - minVal) / bucketCount + 1;
+
+    vector<vector<int>> buckets(bucketCount);
+
+    for (int i = 0; i < arr.size(); i++) {
+        int bucketIndex = (arr[i] - minVal) / bucketRange;
+        buckets[bucketIndex].push_back(arr[i]);
+    }
+
+    for (int i = 0; i < bucketCount; i++) {
+        for (int j = 1; j < buckets[i].size(); j++) {
+            int key = buckets[i][j];
+            int k = j - 1;
+            while (k >= 0 && buckets[i][k] > key) {
+                buckets[i][k + 1] = buckets[i][k];
+                k--;
+            }
+            buckets[i][k + 1] = key;
+        }
+    }
+
+    vector<int> sortedArr;
+    for (int i = 0; i < bucketCount; i++) {
+        for (int j = 0; j < buckets[i].size(); j++) {
+            sortedArr.push_back(buckets[i][j]);
+        }
+    }
+
+    for (int i = 0; i < size; i++) {
+        data[i] = to_string(sortedArr[i]);
+    }
 
     cout << "\nSorted Data: ";
     displayData();
@@ -446,7 +515,7 @@ int main() {
         // Ask for data type first
         cout << "\nSelect data type:\n";
         cout << "1. Integer\n";
-        cout << "2. Float\n";
+        cout << "2. Float (0.0)\n";
         cout << "3. String\n";
         cout << "Enter your choice (1-3): ";
 
@@ -672,8 +741,8 @@ test case 2 (strings):
 ______________________________________________________
 test case 3 (floats):
     number of elements: 5
-    elements: 0.2 6.0 0.004 5 4.0
+    elements: 0.2 6.0 0.004 5.0 4.0
     Sorting using Bubble Sort:
-    Sorted Data: [0.004, 0.2, 4.0, 5, 6.0]
+    Sorted Data: [0.004, 0.2, 4.0, 5.0, 6.0]
     Sorting Time: 0.00741 seconds
  ***/
