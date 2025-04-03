@@ -5,7 +5,6 @@
 #include <iomanip>  // for setprecision
 #include <chrono>
 #include <string>
-#include <vector>
 #include <algorithm>
 using namespace chrono;
 
@@ -273,42 +272,57 @@ void SortingSystem<T>::countSort() {
 // Radix Sort
 template <typename T>
 void SortingSystem<T>::radixSort() {
-    cout<<"\nSorting using Radix Sort...\n";
-    cout<<"Initial Data: ";
+    cout << "\nSorting using Radix Sort...\n";
+    cout << "Initial Data: ";
     displayData();
-    cout<<"\n";
+    cout << "\n";
 
-    vector<int> arr;
+    int* arr = new int[size];
     for (int i = 0; i < size; i++) {
-        arr.push_back(stoi(data[i]));
+        arr[i] = data[i];
     }
 
-    int maxVal = *max_element(arr.begin(), arr.end());
+    int maxVal = arr[0];
+    for (int i = 1; i < size; i++) {
+        if (arr[i] > maxVal)
+            maxVal = arr[i];
+    }
 
     for (int exp = 1; maxVal / exp > 0; exp *= 10) {
-        vector<int> output(arr.size());
+        int output[size];
         int count[10] = {0};
 
-        for (int i = 0; i < arr.size(); i++) {
-            count[(arr[i] / exp) % 10]++;
+        for (int i = 0; i < size; i++) {
+            int digit = (arr[i] / exp) % 10;
+            count[digit]++;
         }
 
         for (int i = 1; i < 10; i++) {
             count[i] += count[i - 1];
         }
 
-        for (int i = arr.size() - 1; i >= 0; i--) {
+        for (int i = size - 1; i >= 0; i--) {
             int digit = (arr[i] / exp) % 10;
             output[count[digit] - 1] = arr[i];
             count[digit]--;
         }
 
-        arr = output;
+        for (int i = 0; i < size; i++) {
+            arr[i] = output[i];
+        }
+
+        cout << "After sorting with exp " << exp << ": [";
+        for (int i = 0; i < size; i++) {
+            cout << arr[i] << (i < size - 1 ? ", " : "");
+        }
+        cout << "]\n";
     }
 
     for (int i = 0; i < size; i++) {
-        data[i] = to_string(arr[i]);
+        data[i] = arr[i];
     }
+
+    delete[] arr;
 
     cout << "\nSorted Data: ";
     displayData();
@@ -317,55 +331,141 @@ void SortingSystem<T>::radixSort() {
 //_____________________________________________________________________________________
 // Bucket Sort
 template <typename T>
-void SortingSystem<T>::bucketSort() {
-    cout<<"\nSorting using Bucket Sort...\n";
-    cout<<"Initial Data: ";
-    displayData();
-    cout<<"\n";
+void SortingSystem<T>::bucketSort()
+{
+    // For numeric types (int, float)
+    if constexpr (std::is_same<T, int>::value || std::is_same<T, float>::value) {
+        cout << "\nSorting using Bucket Sort (numeric)...\n";
+        cout << "Initial Data: ";
+        displayData();
+        cout << "\n";
 
-    vector<int> arr;
-    for (int i = 0; i < size; i++) {
-        arr.push_back(stoi(data[i]));
-    }
+        T* arr = new T[size];
+        for (int i = 0; i < size; i++) {
+            arr[i] = data[i];
+        }
 
-    int minVal = *min_element(arr.begin(), arr.end());
-    int maxVal = *max_element(arr.begin(), arr.end());
+        T minVal = arr[0], maxVal = arr[0];
+        for (int i = 1; i < size; i++) {
+            if (arr[i] < minVal)
+                minVal = arr[i];
+            if (arr[i] > maxVal)
+                maxVal = arr[i];
+        }
 
-    int bucketCount = size;
-    int bucketRange = (maxVal - minVal) / bucketCount + 1;
+        int bucketCount = size;
+        T bucketRange = (maxVal - minVal) / bucketCount + 1;
 
-    vector<vector<int>> buckets(bucketCount);
+        T** buckets = new T*[bucketCount];
+        int* bucketSizes = new int[bucketCount];
+        for (int i = 0; i < bucketCount; i++) {
+            buckets[i] = new T[size];
+            bucketSizes[i] = 0;
+        }
 
-    for (int i = 0; i < arr.size(); i++) {
-        int bucketIndex = (arr[i] - minVal) / bucketRange;
-        buckets[bucketIndex].push_back(arr[i]);
-    }
+        for (int i = 0; i < size; i++) {
+            int bucketIndex = static_cast<int>((arr[i] - minVal) / bucketRange);
+            buckets[bucketIndex][ bucketSizes[bucketIndex] ] = arr[i];
+            bucketSizes[bucketIndex]++;
+        }
 
-    for (int i = 0; i < bucketCount; i++) {
-        for (int j = 1; j < buckets[i].size(); j++) {
-            int key = buckets[i][j];
-            int k = j - 1;
-            while (k >= 0 && buckets[i][k] > key) {
-                buckets[i][k + 1] = buckets[i][k];
-                k--;
+        for (int i = 0; i < bucketCount; i++) {
+            for (int j = 1; j < bucketSizes[i]; j++) {
+                T key = buckets[i][j];
+                int k = j - 1;
+                while (k >= 0 && buckets[i][k] > key) {
+                    buckets[i][k + 1] = buckets[i][k];
+                    k--;
+                }
+                buckets[i][k + 1] = key;
             }
-            buckets[i][k + 1] = key;
+            cout << "After sorting bucket " << i << ": [";
+            for (int j = 0; j < bucketSizes[i]; j++) {
+                cout << buckets[i][j];
+                if (j < bucketSizes[i] - 1)
+                    cout << ", ";
+            }
+            cout << "]\n";
         }
-    }
 
-    vector<int> sortedArr;
-    for (int i = 0; i < bucketCount; i++) {
-        for (int j = 0; j < buckets[i].size(); j++) {
-            sortedArr.push_back(buckets[i][j]);
+        int index = 0;
+        for (int i = 0; i < bucketCount; i++) {
+            for (int j = 0; j < bucketSizes[i]; j++) {
+                arr[index++] = buckets[i][j];
+            }
         }
-    }
 
-    for (int i = 0; i < size; i++) {
-        data[i] = to_string(sortedArr[i]);
-    }
+        for (int i = 0; i < size; i++) {
+            data[i] = arr[i];
+        }
 
-    cout << "\nSorted Data: ";
-    displayData();
+        for (int i = 0; i < bucketCount; i++) {
+            delete[] buckets[i];
+        }
+        delete[] buckets;
+        delete[] bucketSizes;
+        delete[] arr;
+
+        cout << "\nSorted Data: ";
+        displayData();
+
+    }
+    else if constexpr (std::is_same<T, std::string>::value) {
+        cout << "\nSorting using Bucket Sort (strings)...\n";
+        cout << "Initial Data: ";
+        displayData();
+        cout << "\n";
+
+        // Use 256 buckets (one for each possible ASCII value)
+        const int bucketCount = 256;
+        std::string** buckets = new std::string*[bucketCount];
+        int* bucketSizes = new int[bucketCount];
+        for (int i = 0; i < bucketCount; i++) {
+            buckets[i] = new std::string[size];
+            bucketSizes[i] = 0;
+        }
+
+        for (int i = 0; i < size; i++) {
+            int bucketIndex = data[i].empty() ? 0 : static_cast<int>(data[i][0]);
+            buckets[bucketIndex][ bucketSizes[bucketIndex] ] = data[i];
+            bucketSizes[bucketIndex]++;
+        }
+
+        for (int i = 0; i < bucketCount; i++) {
+            for (int j = 1; j < bucketSizes[i]; j++) {
+                std::string key = buckets[i][j];
+                int k = j - 1;
+                while (k >= 0 && buckets[i][k] > key) {
+                    buckets[i][k + 1] = buckets[i][k];
+                    k--;
+                }
+                buckets[i][k + 1] = key;
+            }
+            cout << "After sorting bucket " << i << ": [";
+            for (int j = 0; j < bucketSizes[i]; j++) {
+                cout << buckets[i][j];
+                if (j < bucketSizes[i] - 1)
+                    cout << ", ";
+            }
+            cout << "]\n";
+        }
+
+        int index = 0;
+        for (int i = 0; i < bucketCount; i++) {
+            for (int j = 0; j < bucketSizes[i]; j++) {
+                data[index++] = buckets[i][j];
+            }
+        }
+
+        for (int i = 0; i < bucketCount; i++) {
+            delete[] buckets[i];
+        }
+        delete[] buckets;
+        delete[] bucketSizes;
+
+        cout << "\nSorted Data: ";
+        displayData();
+    }
 }
 
 //_____________________________________________________________________________________
