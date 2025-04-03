@@ -845,4 +845,18 @@ test case 3 (floats):
     Sorting using Bubble Sort:
     Sorted Data: [0.004, 0.2, 4.0, 5.0, 6.0]
     Sorting Time: 0.00741 seconds
+______________________________________________________
+test case 4 (integers):
+    number of elements: 7
+    elements: 121 432 564 23 1 45 788
+    Sorting using Radix Sort...
+    Initial Data: [121, 432, 564, 23, 1, 45, 788]
+
+    After sorting with exp 1: [121, 1, 432, 23, 564, 45, 788]
+    After sorting with exp 10: [1, 121, 23, 432, 45, 564, 788]
+    After sorting with exp 100: [1, 23, 45, 121, 432, 564, 788]
+
+    Sorted Data: [1, 23, 45, 121, 432, 564, 788]
+    Sorting Time: 0.00001 seconds
+
  ***/
