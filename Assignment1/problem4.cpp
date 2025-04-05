@@ -228,45 +228,74 @@ void SortingSystem<T>::merge(int left, int mid, int right) {
 // Quick Sort
 template <typename T>
 void SortingSystem<T>::quickSort(int low, int high) {
-    cout<<"\nSorting using Quick Sort...\n";
-    cout<<"Initial Data: ";
-    displayData();
-    cout<<"\n";
-    auto start = chrono::high_resolution_clock::now();
-
-    // implement the quick sort function here (for Quick Sort)
-
-    cout << "\nSorted Data: ";
-    displayData();
-
-    auto end = chrono::high_resolution_clock::now();
-    chrono::duration<double> duration = end - start;
-    cout << "Sorting Time: " << fixed << setprecision(5) << duration.count() << " seconds\n";
+    if (low < high) {
+        int pivotIndex = partition(low, high);
+        quickSort(low, pivotIndex - 1);
+        quickSort(pivotIndex + 1, high);
+    }
 }
 
-// Partition helper function (for Quick Sort)
 template <typename T>
 int SortingSystem<T>::partition(int low, int high) {
+    T pivot = data[high];
+    int i = low - 1;
 
-    //implementing the partition function
+    for (int j = low; j < high; j++) {
+        if (data[j] <= pivot) {
+            i++;
+            swap(&data[i], &data[j]);
+        }
+    }
 
-    return 0;
+    swap(&data[i + 1], &data[high]);
+    return i + 1;
 }
+
 
 //_____________________________________________________________________________________
 // Count Sort
 template <typename T>
 void SortingSystem<T>::countSort() {
-    cout<<"\nSorting using Count Sort...\n";
-    cout<<"Initial Data: ";
+    cout << "\nSorting using Count Sort...\n";
+    cout << "Initial Data: ";
     displayData();
-    cout<<"\n";
+    cout << "\n";
 
-    // implement the count sort function here (for Count Sort)
+    T maxElement = data[0];
+    for (int i = 1; i < size; i++) {
+        if (data[i] > maxElement) {
+            maxElement = data[i];
+        }
+    }
+    int* count = new int[maxElement + 1]();
+    
+    for (int i = 0; i < size; i++) {
+        count[data[i]]++;
+    }
+
+    for (int i = 1; i <= maxElement; i++) {
+        count[i] += count[i - 1];
+    }
+
+    T* output = new T[size];
+
+    for (int i = size - 1; i >= 0; i--) {
+        output[count[data[i]] - 1] = data[i];
+        count[data[i]]--;
+    }
+
+    for (int i = 0; i < size; i++) {
+        data[i] = output[i];
+    }
+
+    // Clean up dynamically allocated memory
+    delete[] count;
+    delete[] output;
 
     cout << "\nSorted Data: ";
     displayData();
 }
+
 
 //_____________________________________________________________________________________
 // Radix Sort
@@ -858,5 +887,6 @@ test case 4 (integers):
 
     Sorted Data: [1, 23, 45, 121, 432, 564, 788]
     Sorting Time: 0.00001 seconds
+______________________________________________________
 
  ***/
