@@ -903,5 +903,46 @@ test case 5 (floats)
 
     Sorted Data: [4e-05, 0.06, 0.4, 0.98, 100]
     Sorting Time: 0.00008 seconds
-
+    ______________________________________________________
+    Test Case 6 (Integers):
+    Number of elements: 5
+    Elements: 5 3 8 1 7
+    Sorting using Shell Sort:
+    Sorted Data: [1, 3, 5, 7, 8]
+    Sorting Time: 0.00002 seconds
+    ______________________________________________________
+    Test Case 7 (Negative and positive integers):
+    Number of elements: 6
+    Elements: -3 0 2 -1 5 -2
+    Sorting using Shell Sort:
+    Sorted Data: [-3, -2, -1, 0, 2, 5]
+    Sorting Time: 0.00003 seconds
+    ______________________________________________________
+    Test Case 8 (Already sorted):
+    Number of elements: 5
+    Elements: 1 2 3 4 5
+    Sorting using Shell Sort:
+    Sorted Data: [1, 2, 3, 4, 5]
+    Sorting Time: 0.00001 seconds
+    ______________________________________________________
+    Test Case 9 (Integers):
+    Number of elements: 6
+    Elements: 12 11 13 5 6 7
+    Sorting using Merge Sort:
+    Sorted Data: [5, 6, 7, 11, 12, 13]
+    Sorting Time: 0.00007 seconds
+    ______________________________________________________
+    Test Case 10 (With duplicates):
+    Number of elements: 6
+    Elements: 4 1 3 2 2 4
+    Sorting using Merge Sort:
+    Sorted Data: [1, 2, 2, 3, 4, 4]
+    Sorting Time: 0.00006 seconds
+    ______________________________________________________
+    Test Case 11 (Negative and positive integers):
+    Number of elements: 6
+    Elements: -3 0 2 -1 5 -2
+    Sorting using Merge Sort:
+    Sorted Data: [-3, -2, -1, 0, 2, 5]
+    Sorting Time: 0.00005 seconds
  ***/
