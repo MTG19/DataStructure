@@ -179,6 +179,13 @@ Enter element 1: 10
 Enter element 2: 2
 Enter element 3: 8
 Enter element 4: 4
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: (4 + 8) / 2 = 6
@@ -199,6 +206,13 @@ Enter element 1: 6
 Enter element 2: 2
 Enter element 3: 4
 Enter element 4: 8
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 5
@@ -219,6 +233,13 @@ Enter element 1: 0
 Enter element 2: 2
 Enter element 3: 4
 Enter element 4: 6
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 3
@@ -240,6 +261,13 @@ Enter element 1: 7
 Enter element 2: 7
 Enter element 3: 7
 Enter element 4: 7
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 7
@@ -259,6 +287,13 @@ Enter the number of elements: 3
 Enter element 1: 5
 Enter element 2: 5
 Enter element 3: 5
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 5
@@ -280,6 +315,13 @@ Input:
 Input:
 Enter the number of elements: 1
 Enter element 1: 42
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 42
@@ -296,6 +338,13 @@ Summation: 42
 Input:
 Enter the number of elements: 1
 Enter element 1: 9
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 9
@@ -320,6 +369,13 @@ Enter element 3: 2
 Enter element 4: 4
 Enter element 5: 6
 Enter element 6: 5
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5):
 Expected Output:
 if user choose option 1 :
 Median: 3.5
