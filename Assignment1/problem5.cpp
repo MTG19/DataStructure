@@ -277,8 +277,8 @@ Summation: 9
 
 
 
-//Mixed numbers:
-Test Case 10: 
+#mixed numbers:
+//Test Case 10: 
 Input:
 Enter the number of elements: 6
 Enter element 1: 1
