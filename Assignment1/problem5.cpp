@@ -55,16 +55,42 @@ public:
         return sum;
     }
     };
+    bool isValidIntegerInput() {
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return false;
+    }
+    return true;
+}
 int main()
 {
     int n;
-    cout << "Enter the number of elements: ";
-    cin >> n;
 
-    int *arr = new int[n];
+    // Input validation for number of elements
+    while (true) {
+        cout << "Enter the number of elements: ";
+        cin >> n;
+        if (!isValidIntegerInput() || n <= 0) {
+            cout << "Invalid input! Please enter a positive integer.\n";
+        } else {
+            break;
+        }
+    }
+
+    int* arr = new int[n];
+
+    // Input validation for elements
     for (int i = 0; i < n; i++) {
-        cout << "Enter element " << i + 1 << ": ";
-        cin >> arr[i];
+        while (true) {
+            cout << "Enter element " << i + 1 << ": ";
+            cin >> arr[i];
+            if (!isValidIntegerInput()) {
+                cout << "Invalid input! Please enter an integer.\n";
+            } else {
+                break;
+            }
+        }
     }
 
     StatisticalCalculation stats(arr, n);
@@ -76,7 +102,14 @@ int main()
         cout << "Enter your choice (1-5): ";
 
         int choice;
-        cin >> choice;
+        while (true) {
+            cin >> choice;
+            if (!isValidIntegerInput() || choice < 1 || choice > 5) {
+                cout << "Invalid choice! Please enter a number between 1 and 5: ";
+            } else {
+                break;
+            }
+        }
 
         switch (choice) {
             case 1: cout << "Median: " << stats.findMedian() << endl; break;
@@ -84,12 +117,12 @@ int main()
             case 3: cout << "Maximum: " << stats.findMaximum() << endl; break;
             case 4: cout << "Mean: " << stats.findMean() << endl; break;
             case 5: cout << "Summation: " << stats.findSummation() << endl; break;
-            default: cout << "Invalid choice! Please enter a number between 1 and 5.\n";
         }
     }
 
     return 0;
 }
+
 /*
 
 
@@ -298,6 +331,46 @@ if user choose option 4 :
 Mean: 3.5
 if user choose option 5 :
 Summation: 21
+
+
+#invalid input
+//test case 11:
+Enter the number of elements: 5
+Enter element 1: 4
+Enter element 2: 8
+Enter element 3: 7
+Enter element 4: 5
+Enter element 5: 1
+
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5): 6
+Invalid choice! Please enter a number between 1 and 5:
+
+//test case 12:
+Enter the number of elements: 5
+Enter element 1: 4
+Enter element 2: 8
+Enter element 3: 7
+Enter element 4: 5
+Enter element 5: 1
+
+Select a statistical calculation:
+1. Find Median
+2. Find Minimum
+3. Find Maximum
+4. Find Mean
+5. Find Summation
+Enter your choice (1-5): a
+Invalid choice! Please enter a number between 1 and 5:
+
+
+
+
 
 
  
