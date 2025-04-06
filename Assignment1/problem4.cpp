@@ -5,7 +5,7 @@
 #include <iomanip>  // for setprecision
 #include <chrono>
 #include <string>
-#include <algorithm>
+
 using namespace chrono;
 
 // Constructor
@@ -228,27 +228,27 @@ void SortingSystem<T>::merge(int left, int mid, int right) {
 // Quick Sort
 template <typename T>
 void SortingSystem<T>::quickSort(int low, int high) {
-    if (low < high) {
-        int pivotIndex = partition(low, high);
-        quickSort(low, pivotIndex - 1);
-        quickSort(pivotIndex + 1, high);
-    }
+    // if (low < high) {
+    //     int pivotIndex = partition(low, high);
+    //     quickSort(low, pivotIndex - 1);
+    //     quickSort(pivotIndex + 1, high);
+    // }
 }
 
 template <typename T>
 int SortingSystem<T>::partition(int low, int high) {
-    T pivot = data[high];
-    int i = low - 1;
-
-    for (int j = low; j < high; j++) {
-        if (data[j] <= pivot) {
-            i++;
-            swap(&data[i], &data[j]);
-        }
-    }
-
-    swap(&data[i + 1], &data[high]);
-    return i + 1;
+    // T pivot = data[high];
+    // int i = low - 1;
+    //
+    // for (int j = low; j < high; j++) {
+    //     if (data[j] <= pivot) {
+    //         i++;
+    //         swap(&data[i], &data[j]);
+    //     }
+    // }
+    //
+    // swap(&data[i + 1], &data[high]);
+    // return i + 1;
 }
 
 
@@ -260,37 +260,37 @@ void SortingSystem<T>::countSort() {
     cout << "Initial Data: ";
     displayData();
     cout << "\n";
-
-    T maxElement = data[0];
-    for (int i = 1; i < size; i++) {
-        if (data[i] > maxElement) {
-            maxElement = data[i];
-        }
-    }
-    int* count = new int[maxElement + 1]();
-    
-    for (int i = 0; i < size; i++) {
-        count[data[i]]++;
-    }
-
-    for (int i = 1; i <= maxElement; i++) {
-        count[i] += count[i - 1];
-    }
-
-    T* output = new T[size];
-
-    for (int i = size - 1; i >= 0; i--) {
-        output[count[data[i]] - 1] = data[i];
-        count[data[i]]--;
-    }
-
-    for (int i = 0; i < size; i++) {
-        data[i] = output[i];
-    }
-
-    // Clean up dynamically allocated memory
-    delete[] count;
-    delete[] output;
+    //
+    // T maxElement = data[0];
+    // for (int i = 1; i < size; i++) {
+    //     if (data[i] > maxElement) {
+    //         maxElement = data[i];
+    //     }
+    // }
+    // int* count = new int[maxElement + 1]();
+    //
+    // for (int i = 0; i < size; i++) {
+    //     count[data[i]]++;
+    // }
+    //
+    // for (int i = 1; i <= maxElement; i++) {
+    //     count[i] += count[i - 1];
+    // }
+    //
+    // T* output = new T[size];
+    //
+    // for (int i = size - 1; i >= 0; i--) {
+    //     output[count[data[i]] - 1] = data[i];
+    //     count[data[i]]--;
+    // }
+    //
+    // for (int i = 0; i < size; i++) {
+    //     data[i] = output[i];
+    // }
+    //
+    // // Clean up dynamically allocated memory
+    // delete[] count;
+    // delete[] output;
 
     cout << "\nSorted Data: ";
     displayData();
@@ -888,5 +888,20 @@ test case 4 (integers):
     Sorted Data: [1, 23, 45, 121, 432, 564, 788]
     Sorting Time: 0.00001 seconds
 ______________________________________________________
+test case 5 (floats)
+    number of elements: 5
+    elements: 0.00004 0.4 0.98 100 0.06
+
+    Sorting using Bucket Sort (numeric)...
+    Initial Data: [4e-05, 0.4, 0.98, 100, 0.06]
+
+    After sorting bucket 0: [4e-05, 0.06, 0.4, 0.98]
+    After sorting bucket 1: []
+    After sorting bucket 2: []
+    After sorting bucket 3: []
+    After sorting bucket 4: [100]
+
+    Sorted Data: [4e-05, 0.06, 0.4, 0.98, 100]
+    Sorting Time: 0.00008 seconds
 
  ***/

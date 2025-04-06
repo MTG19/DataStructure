@@ -192,116 +192,141 @@ public:
     }
 };
 
-int main() {
+int main()
+{
     IftarManager manager;
+    cout << "                                        Welcome to Iftar Manager!\n";
+    int n;
+    cout << "Enter number of initial guests: ";
+    cin >> n;
+    cin.ignore();
 
-    ifstream infile("P:/Sophomore_SecTerm/Data Structure/DataStructure/Assignment1/problem1.txt");
-    if (!infile) {
-        cout << "Warning: Unable to open input file. Starting with an empty guest list.\n";
-    } else {
-        char tempName[MaxNameLength];
-        char tempContact[MaxContactLength];
-        char tempDate[MaxDateLength];
-        while (infile >> tempName >> tempContact >> tempDate) {
+    for (int i = 0; i < n; ++i) {
+        char name[MaxNameLength];
+        char contact[MaxContactLength];
+        char date[MaxDateLength];
 
-            if (!isDateFormatValid(tempDate)) {
-                cout << "Invalid date format for guest " << tempName << ". Skipping entry.\n";
-                continue;
-            }
-            if (!isDateNotPast(tempDate)) {
-                cout << "Date " << tempDate << " for guest " << tempName << " is in the past. Skipping entry.\n";
-                continue;
-            }
-            Guest* newGuest = new Guest(tempName, tempContact, tempDate);
-            manager.add_guest(newGuest);
+        cout << "\nGuest " << (i + 1) << ":\n";
+        cout << "Enter name: ";
+        cin >> name;
+        cout << "Enter contact: ";
+        cin >> contact;
+        cout << "Enter iftar date (YYYY-MM-DD): ";
+        cin >> date;
+
+        if (!isDateFormatValid(date)) {
+            cout << "Invalid date format. Skipping this guest.\n";
+            continue;
         }
-        infile.close();
+        if (!isDateNotPast(date)) {
+            cout << "Date is in the past. Skipping this guest.\n";
+            continue;
+        }
+
+        Guest* newGuest = new Guest(name, contact, date);
+        manager.add_guest(newGuest);
     }
 
-    int choice;
-    do {
-        cout << "\n==========================\n";
-        cout << "    IFTAR MANAGER MENU    \n";
-        cout << "==========================\n";
-        cout << "1. Add a new guest\n";
-        cout << "2. Display all guests\n";
-        cout << "3. Update a guest invitation date\n";
-        cout << "4. Sort guests by date\n";
-        cout << "5. Send reminders for a specific date\n";
-        cout << "6. Exit\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-        cin.ignore();
+    bool keepRunning = true;
+    while (keepRunning)
+    {
+        int choice;
+        do {
+            cout << "\n==========================\n";
+            cout << "    IFTAR MANAGER MENU    \n";
+            cout << "==========================\n";
+            cout << "1. Add a new guest\n";
+            cout << "2. Display all guests\n";
+            cout << "3. Update a guest invitation date\n";
+            cout << "4. Sort guests by date\n";
+            cout << "5. Send reminders for a specific date\n";
+            cout << "6. Exit\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cin.ignore();
 
-        switch (choice) {
-            case 1: {
+            switch (choice) {
+                case 1: {
+                        char name[MaxNameLength], contact[MaxContactLength], date[MaxDateLength];
+                        cout << "Enter guest name: ";
+                        cin >> name;
+                        cout << "Enter guest contact: ";
+                        cin >> contact;
+                        cout << "Enter iftar date (YYYY-MM-DD): ";
+                        cin >> date;
 
-                char name[MaxNameLength], contact[MaxContactLength], date[MaxDateLength];
-                cout << "Enter guest name: ";
-                cin >> name;
-                cout << "Enter guest contact: ";
-                cin >> contact;
-                cout << "Enter iftar date (YYYY-MM-DD): ";
-                cin >> date;
+                        if (!isDateFormatValid(date)) {
+                            cout << "Error: Date format is invalid. Please use YYYY-MM-DD.\n";
+                            break;
+                        }
+                        if (!isDateNotPast(date)) {
+                            cout << "Error: The date entered is in the past. Please enter a valid future date.\n";
+                            break;
+                        }
+                        Guest* newGuest = new Guest(name, contact, date);
+                        manager.add_guest(newGuest);
+                        cout << "Guest added successfully.\n";
+                        break;
+                }
+                case 2: {
+                        manager.display_all_guests();
+                        break;
+                }
+                case 3: {
+                        char name[MaxNameLength], newDate[MaxDateLength];
+                        cout << "Enter the guest's name to update: ";
+                        cin >> name;
+                        cout << "Enter the new date (YYYY-MM-DD): ";
+                        cin >> newDate;
+                        if (!isDateFormatValid(newDate)) {
+                            cout << "Error: Date format is invalid. Please use YYYY-MM-DD.\n";
+                            break;
+                        }
+                        if (!isDateNotPast(newDate)) {
+                            cout << "Error: The new date entered is in the past.\n";
+                            break;
+                        }
+                        manager.update_guest_invitation(name, newDate);
+                        break;
+                }
+                case 4: {
+                        manager.sort_guest_list();
+                        break;
+                }
+                case 5: {
+                        char date[MaxDateLength];
+                        cout << "Enter the date (YYYY-MM-DD) for sending reminders: ";
+                        cin >> date;
+                        if (!isDateFormatValid(date)) {
+                            cout << "Error: Date format is invalid. Please use YYYY-MM-DD.\n";
+                            break;
+                        }
+                        manager.send_reminder(date);
+                        break;
+                }
+                case 6: {
+                        cout << "Exiting the program...\n";
+                        keepRunning = false;
+                        break;
+                }
+                default: {
+                        cout << "Invalid choice. Please try again.\n";
+                        break;
+                }
+            }
 
-                if (!isDateFormatValid(date)) {
-                    cout << "Error: Date format is invalid. Please use YYYY-MM-DD.\n";
-                    break;
+            if (keepRunning) {
+                char cont;
+                cout << "\nDo you want to perform another operation? (y/n): ";
+                cin >> cont;
+                if (cont == 'n' && cont == 'N' ) {
+                    keepRunning = false;
+                    cout << "Goodbye!\n";
                 }
-                if (!isDateNotPast(date)) {
-                    cout << "Error: The date entered is in the past. Please enter a valid future date.\n";
-                    break;
-                }
-                Guest* newGuest = new Guest(name, contact, date);
-                manager.add_guest(newGuest);
-                cout << "Guest added successfully.\n";
-                break;
             }
-            case 2: {
-                manager.display_all_guests();
-                break;
-            }
-            case 3: {
-                char name[MaxNameLength], newDate[MaxDateLength];
-                cout << "Enter the guest's name to update: ";
-                cin >> name;
-                cout << "Enter the new date (YYYY-MM-DD): ";
-                cin >> newDate;
-                if (!isDateFormatValid(newDate)) {
-                    cout << "Error: Date format is invalid. Please use YYYY-MM-DD.\n";
-                    break;
-                }
-                if (!isDateNotPast(newDate)) {
-                    cout << "Error: The new date entered is in the past.\n";
-                    break;
-                }
-                manager.update_guest_invitation(name, newDate);
-                break;
-            }
-            case 4: {
-                manager.sort_guest_list();
-                break;
-            }
-            case 5: {
-                char date[MaxDateLength];
-                cout << "Enter the date (YYYY-MM-DD) for sending reminders: ";
-                cin >> date;
-                if (!isDateFormatValid(date)) {
-                    cout << "Error: Date format is invalid. Please use YYYY-MM-DD.\n";
-                    break;
-                }
-                manager.send_reminder(date);
-                break;
-            }
-            case 6: {
-                cout << "Exiting the program...\n";
-                break;
-            }
-            default: {
-                cout << "Invalid choice. Please try again.\n";
-            }
-        }
-    } while (choice != 6);
+
+        } while (false);
+    }
 
     return 0;
 }

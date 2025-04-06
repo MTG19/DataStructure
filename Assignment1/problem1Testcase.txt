@@ -1,0 +1,87 @@
+Aisha aisha@example.com 2025-03-15
+Omar omar@example.com 2025-03-18
+Zainab zainab@example.com 2025-03-30
+malak malak@example.com 2025-04-02
+malak malak@example.com 2025-04-07
+malak malak@example.com 2025-04-04
+
+test case 1
+    Enter number of initial guests: 2
+
+    Guest 1:
+    Enter name: Ahmed
+    Enter contact: 0123456789
+    Enter iftar date (YYYY-MM-DD): 2025/03/30
+
+    Expected Output:Invalid date format. Skipping this guest.
+
+    Guest 2:
+    Enter name: Mariam
+    Enter contact: 0987654321
+    Enter iftar date (YYYY-MM-DD): 2025-03-20
+
+    Date is in the past. Skipping this guest.
+
+test case 2
+    Enter number of initial guests: 1
+
+    Guest 1:
+    Enter name: Khaled
+    Enter contact: 01012345678
+    Enter iftar date (YYYY-MM-DD): 2025-04-10
+
+    Choice: 2
+
+    ----------------------------------------------------------
+                          GUEST LIST
+    ----------------------------------------------------------
+    Name            | Contact                 | Iftar Date
+    ----------------------------------------------------------
+    khaled          | 01012345678             | 2025-04-10
+    ----------------------------------------------------------
+
+test case 3
+    Choice: 1
+    Enter guest name: Sarah
+    Enter guest contact: 01198765432
+    Enter iftar date (YYYY-MM-DD): 2025-04-08
+
+    Expected Output: Guest added successfully.
+
+test case 4
+    Choice: 3
+    Enter the guest's name to update: Khaled
+    Enter the new date (YYYY-MM-DD): 2025-04-12
+
+    Expected output: Updating invitation for khaled...
+
+
+1. Unit tests for toLowerCase
+ID	Description	                           Input	          Expected (in‑place)
+TL1	All‑uppercase letters	              "HELLO"	               "hello"
+TL2	Mixed case with numbers & symbols	"AbC123! XyZ"	        "abc123! xyz"
+TL3	Empty string	                        ""                     	""
+
+
+2. Unit tests for isDateFormatValid
+ID	Description	                 Input	        Expected
+DF1	Correct format	            "2025-03-25"	true
+DF2	Wrong separators	        "2025/03/25"	false
+DF3	Too short	                "2025-3-5"  	false
+DF4	Non‑digit in year	        "20a5-03-25"	false
+DF5	Month = 00	                "2025-00-10"	false
+DF6	Day = 32	                "2025-12-32"	false
+
+
+3. Unit tests for isDateNotPast
+(Assumes CUR_YEAR=2025, CUR_MONTH=3, CUR_DAY=25)
+
+ID	Description                    	Input	    Expected
+DP1	Today’s date	            "2025-03-25"	true
+DP2	Future date same month  	"2025-03-30"	true
+DP3	Future date later year	    "2026-01-01"	true
+DP4	Past day in same month	    "2025-03-10"	false
+DP5	Past month same year	    "2025-02-28"	false
+DP6	Past year	                "2024-12-31"	false
+
+

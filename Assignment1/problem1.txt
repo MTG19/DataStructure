@@ -1,6 +1,0 @@
-Aisha aisha@example.com 2025-03-15
-Omar omar@example.com 2025-03-18
-Zainab zainab@example.com 2025-03-30
-malak malak@example.com 2025-04-02
-malak malak@example.com 2025-04-07
-malak malak@example.com 2025-04-04
