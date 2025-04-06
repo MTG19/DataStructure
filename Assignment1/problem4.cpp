@@ -5,7 +5,6 @@
 #include <iomanip>  // for setprecision
 #include <chrono>
 #include <string>
-
 using namespace chrono;
 
 // Constructor
@@ -228,29 +227,52 @@ void SortingSystem<T>::merge(int left, int mid, int right) {
 // Quick Sort
 template <typename T>
 void SortingSystem<T>::quickSort(int low, int high) {
-    // if (low < high) {
-    //     int pivotIndex = partition(low, high);
-    //     quickSort(low, pivotIndex - 1);
-    //     quickSort(pivotIndex + 1, high);
-    // }
+    // Only measure time on the initial call (when low=0 and high=size-1)
+    static bool timing = false;
+    static clock_t start;
+
+    if (low == 0 && high == size - 1) {
+        cout << "\nSorting using Quick Sort...\n";
+        cout << "Initial Data: ";
+        displayData();
+        cout << "\n";
+        timing = true;
+        start = clock();
+    }
+
+    if (low < high) {
+        int pivotIndex = partition(low, high);
+        quickSort(low, pivotIndex - 1);
+        quickSort(pivotIndex + 1, high);
+    }
+
+    // Only output timing on the initial call completion
+    if (low == 0 && high == size - 1 && timing) {
+        clock_t end = clock();
+        double duration = double(end - start) / CLOCKS_PER_SEC;
+        cout << "Sorted Data: ";
+        displayData();
+        cout << "Sorting Time: " << fixed << setprecision(5) << duration << " seconds\n";
+        timing = false; // Reset for potential future calls
+    }
 }
 
+// Quick Sort helper function
 template <typename T>
 int SortingSystem<T>::partition(int low, int high) {
-    // T pivot = data[high];
-    // int i = low - 1;
-    //
-    // for (int j = low; j < high; j++) {
-    //     if (data[j] <= pivot) {
-    //         i++;
-    //         swap(&data[i], &data[j]);
-    //     }
-    // }
-    //
-    // swap(&data[i + 1], &data[high]);
-    // return i + 1;
-}
+    T pivot = data[high];
+    int i = low - 1;
 
+    for (int j = low; j < high; j++) {
+        if (data[j] <= pivot) {
+            i++;
+            std::swap(data[i], data[j]);
+        }
+    }
+
+    std::swap(data[i + 1], data[high]);
+    return i + 1;
+}
 
 //_____________________________________________________________________________________
 // Count Sort
@@ -260,37 +282,37 @@ void SortingSystem<T>::countSort() {
     cout << "Initial Data: ";
     displayData();
     cout << "\n";
-    //
-    // T maxElement = data[0];
-    // for (int i = 1; i < size; i++) {
-    //     if (data[i] > maxElement) {
-    //         maxElement = data[i];
-    //     }
-    // }
-    // int* count = new int[maxElement + 1]();
-    //
-    // for (int i = 0; i < size; i++) {
-    //     count[data[i]]++;
-    // }
-    //
-    // for (int i = 1; i <= maxElement; i++) {
-    //     count[i] += count[i - 1];
-    // }
-    //
-    // T* output = new T[size];
-    //
-    // for (int i = size - 1; i >= 0; i--) {
-    //     output[count[data[i]] - 1] = data[i];
-    //     count[data[i]]--;
-    // }
-    //
-    // for (int i = 0; i < size; i++) {
-    //     data[i] = output[i];
-    // }
-    //
-    // // Clean up dynamically allocated memory
-    // delete[] count;
-    // delete[] output;
+
+    T maxElement = data[0];
+    for (int i = 1; i < size; i++) {
+        if (data[i] > maxElement) {
+            maxElement = data[i];
+        }
+    }
+    int* count = new int[maxElement + 1]();
+
+    for (int i = 0; i < size; i++) {
+        count[data[i]]++;
+    }
+
+    for (int i = 1; i <= maxElement; i++) {
+        count[i] += count[i - 1];
+    }
+
+    T* output = new T[size];
+
+    for (int i = size - 1; i >= 0; i--) {
+        output[count[data[i]] - 1] = data[i];
+        count[data[i]]--;
+    }
+
+    for (int i = 0; i < size; i++) {
+        data[i] = output[i];
+    }
+
+    // Clean up dynamically allocated memory
+    delete[] count;
+    delete[] output;
 
     cout << "\nSorted Data: ";
     displayData();
@@ -888,61 +910,61 @@ test case 4 (integers):
     Sorted Data: [1, 23, 45, 121, 432, 564, 788]
     Sorting Time: 0.00001 seconds
 ______________________________________________________
-test case 5 (floats)
-    number of elements: 5
-    elements: 0.00004 0.4 0.98 100 0.06
+ test case 5 (floats)
+     number of elements: 5
+     elements: 0.00004 0.4 0.98 100 0.06
 
-    Sorting using Bucket Sort (numeric)...
-    Initial Data: [4e-05, 0.4, 0.98, 100, 0.06]
+     Sorting using Bucket Sort (numeric)...
+     Initial Data: [4e-05, 0.4, 0.98, 100, 0.06]
 
-    After sorting bucket 0: [4e-05, 0.06, 0.4, 0.98]
-    After sorting bucket 1: []
-    After sorting bucket 2: []
-    After sorting bucket 3: []
-    After sorting bucket 4: [100]
+     After sorting bucket 0: [4e-05, 0.06, 0.4, 0.98]
+     After sorting bucket 1: []
+     After sorting bucket 2: []
+     After sorting bucket 3: []
+     After sorting bucket 4: [100]
 
-    Sorted Data: [4e-05, 0.06, 0.4, 0.98, 100]
-    Sorting Time: 0.00008 seconds
-    ______________________________________________________
-    Test Case 6 (Integers):
-    Number of elements: 5
-    Elements: 5 3 8 1 7
-    Sorting using Shell Sort:
-    Sorted Data: [1, 3, 5, 7, 8]
-    Sorting Time: 0.00002 seconds
-    ______________________________________________________
-    Test Case 7 (Negative and positive integers):
-    Number of elements: 6
-    Elements: -3 0 2 -1 5 -2
-    Sorting using Shell Sort:
-    Sorted Data: [-3, -2, -1, 0, 2, 5]
-    Sorting Time: 0.00003 seconds
-    ______________________________________________________
-    Test Case 8 (Already sorted):
-    Number of elements: 5
-    Elements: 1 2 3 4 5
-    Sorting using Shell Sort:
-    Sorted Data: [1, 2, 3, 4, 5]
-    Sorting Time: 0.00001 seconds
-    ______________________________________________________
-    Test Case 9 (Integers):
-    Number of elements: 6
-    Elements: 12 11 13 5 6 7
-    Sorting using Merge Sort:
-    Sorted Data: [5, 6, 7, 11, 12, 13]
-    Sorting Time: 0.00007 seconds
-    ______________________________________________________
-    Test Case 10 (With duplicates):
-    Number of elements: 6
-    Elements: 4 1 3 2 2 4
-    Sorting using Merge Sort:
-    Sorted Data: [1, 2, 2, 3, 4, 4]
-    Sorting Time: 0.00006 seconds
-    ______________________________________________________
-    Test Case 11 (Negative and positive integers):
-    Number of elements: 6
-    Elements: -3 0 2 -1 5 -2
-    Sorting using Merge Sort:
-    Sorted Data: [-3, -2, -1, 0, 2, 5]
-    Sorting Time: 0.00005 seconds
+     Sorted Data: [4e-05, 0.06, 0.4, 0.98, 100]
+     Sorting Time: 0.00008 seconds
+______________________________________________________
+Test Case 6 (Integers):
+     Number of elements: 5
+     Elements: 5 3 8 1 7
+     Sorting using Shell Sort:
+     Sorted Data: [1, 3, 5, 7, 8]
+     Sorting Time: 0.00002 seconds
+     ______________________________________________________
+Test Case 7 (Negative and positive integers):
+     Number of elements: 6
+     Elements: -3 0 2 -1 5 -2
+     Sorting using Shell Sort:
+     Sorted Data: [-3, -2, -1, 0, 2, 5]
+     Sorting Time: 0.00003 seconds
+     ______________________________________________________
+Test Case 8 (Already sorted):
+     Number of elements: 5
+     Elements: 1 2 3 4 5
+     Sorting using Shell Sort:
+     Sorted Data: [1, 2, 3, 4, 5]
+     Sorting Time: 0.00001 seconds
+     ______________________________________________________
+Test Case 9 (Integers):
+     Number of elements: 6
+     Elements: 12 11 13 5 6 7
+     Sorting using Merge Sort:
+     Sorted Data: [5, 6, 7, 11, 12, 13]
+     Sorting Time: 0.00007 seconds
+     ______________________________________________________
+Test Case 10 (With duplicates):
+     Number of elements: 6
+     Elements: 4 1 3 2 2 4
+     Sorting using Merge Sort:
+     Sorted Data: [1, 2, 2, 3, 4, 4]
+     Sorting Time: 0.00006 seconds
+     ______________________________________________________
+Test Case 11 (Negative and positive integers):
+     Number of elements: 6
+     Elements: -3 0 2 -1 5 -2
+     Sorting using Merge Sort:
+     Sorted Data: [-3, -2, -1, 0, 2, 5]
+     Sorting Time: 0.00005 seconds
  ***/

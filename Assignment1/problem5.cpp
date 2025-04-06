@@ -72,8 +72,8 @@ int main()
 
     while (true) {
         cout << "\nSelect a statistical calculation:\n";
-        cout << "1. Find Median\n2. Find Minimum\n3. Find Maximum\n4. Find Mean\n5. Find Summation\n";
-        cout << "Enter your choice (1-5): ";
+        cout << "1. Find Median\n2. Find Minimum\n3. Find Maximum\n4. Find Mean\n5. Find Summation\n6. Exit\n";
+        cout << "Enter your choice (1-6): ";
 
         int choice;
         cin >> choice;
@@ -84,7 +84,8 @@ int main()
             case 3: cout << "Maximum: " << stats.findMaximum() << endl; break;
             case 4: cout << "Mean: " << stats.findMean() << endl; break;
             case 5: cout << "Summation: " << stats.findSummation() << endl; break;
-            default: cout << "Invalid choice! Please enter a number between 1 and 5.\n";
+            case 6: cout << "Exiting...\n"; return 0;
+            default: cout << "Invalid choice! Please enter a number between 1 and 6.\n";
         }
     }
 
