@@ -1,0 +1,7 @@
+visit a.com
+visit b.com
+visit c.com
+back
+back
+forward
+print
