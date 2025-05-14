@@ -1,0 +1,4 @@
+Input:
+arr = [0, 1, 0], k = 1
+Output:
+2
