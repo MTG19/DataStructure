@@ -1,0 +1,23 @@
+#Test Case 2
+Input:
+Ali 60 0
+Sara 85 1
+Tariq 75 2
+Zara 65 3
+Mona 90 4
+Mohamed 95 5
+
+Output:
+Inserted: Ali
+Inserted: Sara
+Inserted: Tariq
+Inserted: Zara
+Inserted: Mona
+Inserted: Mohamed
+Treatment Order:
+Mohamed
+Mona
+Sara
+Tariq
+Ali
+Zara

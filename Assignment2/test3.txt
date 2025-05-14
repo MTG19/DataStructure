@@ -1,0 +1,23 @@
+#Test Case 3
+Input:
+Ahmed Abdullah 55 0
+Omar Khaled 90 1
+Samira Ali 70 2
+Sara Hossam 60 3
+Maha Ahmed 80 4
+Khalid Farouk 85 5
+
+Output:
+Inserted: Ahmed Abdullah
+Inserted: Omar Khaled
+Inserted: Samira Ali
+Inserted: Sara Hossam
+Inserted: Maha Ahmed
+Inserted: Khalid Farouk
+Treatment Order:
+Omar Khaled
+Khalid Farouk
+Maha Ahmed
+Samira Ali
+Sara Hossam
+Ahmed Abdullah
