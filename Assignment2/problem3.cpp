@@ -1,5 +1,7 @@
 
 #include <iostream>
+#include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -41,29 +43,82 @@ int minFlips(int* arr, int n, int k) {
 }
 
 int main() {
-    int n, k;
-    cout << "Enter size of the array: ";
-    cin >> n;
+    while (true) {
+        cout << "\nChoose input method:\n";
+        cout << "1. Manual entry\n";
+        cout << "2. Load from file\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice (1/2/3): ";
 
-    cout << "Enter value of k: ";
-    cin >> k;
+        int choice;
+        cin >> choice;
 
-    int* arr = new int[n];
+        if (choice == 3) {
+            cout << "Exiting program.\n";
+            break;
+        }
 
-    cout << "Enter " << n << " binary values (0 or 1): ";
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-        if (arr[i] != 0 && arr[i] != 1) {
-            cout << "Invalid input. Only 0 or 1 allowed." << endl;
-            delete[] arr;
-            return 1;
+        int n, k;
+        int* arr = nullptr;
+
+        if (choice == 1) {
+            cout << "Enter size of the array: ";
+            cin >> n;
+
+            cout << "Enter value of k: ";
+            cin >> k;
+
+            arr = new int[n];
+            cout << "Enter " << n << " binary values (0 or 1): ";
+            for (int i = 0; i < n; i++) {
+                cin >> arr[i];
+                if (arr[i] != 0 && arr[i] != 1) {
+                    cout << "Invalid input. Only 0 or 1 allowed.\n";
+                    delete[] arr;
+                    continue;
+                }
+            }
+        } else if (choice == 2) {
+            string filename;
+            cout << "Enter filename: ";
+            cin >> filename;
+
+            ifstream file(filename);
+            if (!file.is_open()) {
+                cout << "Failed to open file.\n";
+                continue;
+            }
+
+            file >> n >> k;
+            arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                file >> arr[i];
+                if (arr[i] != 0 && arr[i] != 1) {
+                    cout << "Invalid input in file. Only 0 or 1 allowed.\n";
+                    delete[] arr;
+                    file.close();
+                    continue;
+                }
+            }
+            file.close();
+        } else {
+            cout << "Invalid choice. Try again.\n";
+            continue;
+        }
+
+        int result = minFlips(arr, n, k);
+        cout << "Minimum number of flips: " << result << endl;
+        delete[] arr;
+
+        string again;
+        cout << "Do you want to perform another action? (yes/no): ";
+        cin >> again;
+        if (again != "yes" && again != "y") {
+            cout << "Goodbye!\n";
+            break;
         }
     }
 
-    int result = minFlips(arr, n, k);
-    cout << "Minimum number of flips: " << result << endl;
-
-    delete[] arr;
     return 0;
 }
 

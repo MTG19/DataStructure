@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -109,43 +110,84 @@ public:
 };
 
 int main() {
-
     cout << "___Emergency Room Priority Queue___\n\n";
 
-    int n;
-    cout << "Enter the number of patients please: ";
-    cin >> n;
+    string repeat = "yes";
 
-    MaxHeap emergencyQueue(n);
+    while (repeat == "yes" || repeat == "y") {
+        int n;
+        int inputMethod;
+        cout << "Choose input method:\n1. Manual Entry\n2. Load from File\nEnter choice: ";
+        cin >> inputMethod;
 
-    for (int i = 0; i < n; i++) {
-        Patient p;
-        cout << "\nEnter the details for the patient " << i + 1 << ":\n";
-        cout << "Name: ";
-        cin >> ws; //To clear whitespace before getline
-        cin.getline(p.name, 50);
+        MaxHeap* emergencyQueue = nullptr;
 
-        cout << "Severity (1-100): ";
-        cin >> p.severity;
+        if (inputMethod == 1) {
+            cout << "Enter the number of patients please: ";
+            cin >> n;
+            emergencyQueue = new MaxHeap(n);
 
-        p.arrivalTime = i; //Arrival order
+            for (int i = 0; i < n; i++) {
+                Patient p;
+                cout << "\nEnter the details for patient " << i + 1 << ":\n";
+                cout << "Name: ";
+                cin >> ws;
+                cin.getline(p.name, 100);
+                cout << "Severity (1-100): ";
+                cin >> p.severity;
+                p.arrivalTime = i;
+                emergencyQueue->insert(p);
+                cout << "Heap after insertion: ";
+                emergencyQueue->print_heap();
+                cout << "--------------------------------\n";
+            }
+        } else if (inputMethod == 2) {
+            string filename;
+            cout << "Enter filename: ";
+            cin >> filename;
 
-        emergencyQueue.insert(p);
-        cout << "Heap after insertion: ";
-        emergencyQueue.print_heap();
-        cout << "--------------------------------\n";
+            ifstream file(filename);
+            if (!file.is_open()) {
+                cout << "Error opening file.\n";
+                return 1;
+            }
+
+            file >> n;
+            emergencyQueue = new MaxHeap(n);
+            for (int i = 0; i < n; i++) {
+                Patient p;
+                file >> ws;
+                file.getline(p.name, 100);
+                file >> p.severity;
+                p.arrivalTime = i;
+                emergencyQueue->insert(p);
+                cout << "Heap after insertion: ";
+                emergencyQueue->print_heap();
+                cout << "--------------------------------\n";
+            }
+            file.close();
+        } else {
+            cout << "Invalid input method.\n";
+            return 1;
+        }
+
+        cout << "\nTreatment Order:\n";
+        int order = 1;
+        Patient* treated;
+        while ((treated = emergencyQueue->extract_max()) != nullptr) {
+            cout << order++ << ". " << treated->name
+                 << " (Severity: " << treated->severity
+                 << ", Arrival: " << treated->arrivalTime << ")\n";
+            delete treated;
+        }
+
+        delete emergencyQueue;
+
+        cout << "\nDo you want to perform another operation? (yes/no): ";
+        cin >> repeat;
+        cout << endl;
     }
 
-    cout << "\nTreatment Order:\n";     //Start treatment
-    int order = 1;
-    Patient* treated;
-
-    while ((treated = emergencyQueue.extract_max()) != nullptr) {
-        cout << order++ << ". " << treated->name
-             << " (Severity: " << treated->severity
-             << ", Arrival: " << treated->arrivalTime << ")\n";
-        delete treated;
-    }
-
+    cout << "Exiting program. Goodbye!\n";
     return 0;
 }

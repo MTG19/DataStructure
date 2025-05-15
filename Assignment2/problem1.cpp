@@ -125,24 +125,85 @@ public:
 
 int main() {
     BrowserHistory browser;
+    string choice;
 
-    ifstream input("test3.txt");
-    string command;
-    while (input >> command) {
-        if (command == "visit") {
-            string url;
-            input >> ws;
-            getline(input, url);
-            browser.visit(url.c_str());
-        } else if (command == "back") {
-            browser.goBack();
-        } else if (command == "forward") {
-            browser.goForward();
-        } else if (command == "print") {
-            browser.printCurrent();
+    while (true) {
+        cout << "\nChoose input method:\n";
+        cout << "1. Manual entry\n";
+        cout << "2. Load from file\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice (1/2/3): ";
+        cin >> choice;
+
+        if (choice == "1") {
+            string command;
+            while (true) {
+                cout << "\nEnter command (visit <url> / back / forward / print / stop): ";
+                cin >> command;
+
+                if (command == "visit") {
+                    string url;
+                    cout << "Enter URL: ";
+                    cin.ignore();
+                    getline(cin, url);
+                    browser.visit(url.c_str());
+                } else if (command == "back") {
+                    browser.goBack();
+                } else if (command == "forward") {
+                    browser.goForward();
+                } else if (command == "print") {
+                    browser.printCurrent();
+                } else if (command == "stop") {
+                    break;
+                } else {
+                    cout << "Invalid command.\n";
+                }
+            }
+        } else if (choice == "2") {
+            string filename;
+            cout << "Enter filename: ";
+            cin >> filename;
+
+            ifstream input(filename);
+            if (!input.is_open()) {
+                cout << "Could not open file: " << filename << endl;
+                continue;
+            }
+
+            string command;
+            while (input >> command) {
+                if (command == "visit") {
+                    string url;
+                    input >> ws;
+                    getline(input, url);
+                    browser.visit(url.c_str());
+                } else if (command == "back") {
+                    browser.goBack();
+                } else if (command == "forward") {
+                    browser.goForward();
+                } else if (command == "print") {
+                    browser.printCurrent();
+                }
+            }
+
+            input.close();
+        } else if (choice == "3") {
+            cout << "Exiting program.\n";
+            break;
+        } else {
+            cout << "Invalid choice. Please enter 1, 2, or 3.\n";
+        }
+
+        string again;
+        cout << "\nDo you want to perform another action? (yes/no): ";
+        cin >> again;
+        if (again != "yes" && again != "y") {
+            cout << "Goodbye!\n";
+            break;
         }
     }
 
     return 0;
 }
+
 

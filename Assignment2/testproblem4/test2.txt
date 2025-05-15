@@ -1,0 +1,14 @@
+6
+Ali
+60
+Sara
+85
+Tariq
+75
+Zara
+65
+Mona
+90
+Mohamed
+95
+
