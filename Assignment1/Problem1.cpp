@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include <cstdlib>
+#include <limits>
 
 using namespace std;
 
@@ -192,39 +193,85 @@ public:
     }
 };
 
-int main()
-{
+int main() {
     IftarManager manager;
-    cout << "                                        Welcome to Iftar Manager!\n";
+    cout << "\n                                        Welcome to Iftar Manager!\n";
+
+    int inputMode;
+    cout << "\nChoose input method:\n1. Manual input\n2. Read from file\nEnter choice: ";
+    cin >> inputMode;
+    while (!(cin >> inputMode) || (inputMode != 1 && inputMode != 2)) { // Validate the user's choice
+        cin.clear(); // Clear the error flag
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore invalid input
+        cout << "Please enter a valid choice (1 or 2): ";
+    }
+
     int n;
-    cout << "Enter number of initial guests: ";
-    cin >> n;
-    cin.ignore();
 
-    for (int i = 0; i < n; ++i) {
-        char name[MaxNameLength];
-        char contact[MaxContactLength];
-        char date[MaxDateLength];
-
-        cout << "\nGuest " << (i + 1) << ":\n";
-        cout << "Enter name: ";
-        cin >> name;
-        cout << "Enter contact: ";
-        cin >> contact;
-        cout << "Enter iftar date (YYYY-MM-DD): ";
-        cin >> date;
-
-        if (!isDateFormatValid(date)) {
-            cout << "Invalid date format. Skipping this guest.\n";
-            continue;
-        }
-        if (!isDateNotPast(date)) {
-            cout << "Date is in the past. Skipping this guest.\n";
-            continue;
+    if (inputMode == 2) {
+        // File input
+        ifstream inputFile; // File stream object
+        string filename; // Variable to store the filename
+        while (true) {
+            cout << "\nEnter filename: ";
+            cin >> filename; // Read the filename
+            inputFile.open(filename); // Open the file
+            if (inputFile) break; // Exit the loop if the file is opened successfully
+            cout << "File not found! Please enter a valid filename.\n";
         }
 
-        Guest* newGuest = new Guest(name, contact, date);
-        manager.add_guest(newGuest);
+        inputFile >> n;
+        inputFile.ignore();
+
+        for (int i = 0; i < n; ++i) {
+            char name[MaxNameLength];
+            char contact[MaxContactLength];
+            char date[MaxDateLength];
+
+            inputFile >> name >> contact >> date;
+
+            if (!isDateFormatValid(date)) {
+                cout << "Invalid date format for guest " << name << ". Skipping.\n";
+                continue;
+            }
+            if (!isDateNotPast(date)) {
+                cout << "Date is in the past for guest " << name << ". Skipping.\n";
+                continue;
+            }
+
+            Guest* newGuest = new Guest(name, contact, date);
+            manager.add_guest(newGuest);
+        }
+    } else  {
+        cout << "Enter number of initial guests: ";
+        cin >> n;
+        cin.ignore();
+
+        for (int i = 0; i < n; ++i) {
+            char name[MaxNameLength];
+            char contact[MaxContactLength];
+            char date[MaxDateLength];
+
+            cout << "\nGuest " << (i + 1) << ":\n";
+            cout << "Enter name: ";
+            cin >> name;
+            cout << "Enter contact: ";
+            cin >> contact;
+            cout << "Enter iftar date (YYYY-MM-DD): ";
+            cin >> date;
+
+            if (!isDateFormatValid(date)) {
+                cout << "Invalid date format. Skipping this guest.\n";
+                continue;
+            }
+            if (!isDateNotPast(date)) {
+                cout << "Date is in the past. Skipping this guest.\n";
+                continue;
+            }
+
+            Guest* newGuest = new Guest(name, contact, date);
+            manager.add_guest(newGuest);
+        }
     }
 
     bool keepRunning = true;

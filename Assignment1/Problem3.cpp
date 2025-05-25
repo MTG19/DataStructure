@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>     //To handle exceptions
+#include <fstream>      //To handle file input/output
 using namespace std;
 
 class Node {     //Node class for linked list
