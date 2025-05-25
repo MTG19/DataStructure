@@ -87,19 +87,37 @@ public:
     }
 };
 
+bool isValidIntegerInput() {     //Validation
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(10000, '\n');
+        return false;
+    }
+    return true;
+}
+
 int main() {
-    SortedLinkedList L;     //Create empty sorted linked list
+    SortedLinkedList L;
     int choice, value, index;
 
     while (true) {
-        cout << "\nChoose operation:\n";
-        cout << "1. Insert\n2. Remove\n3. Display\n4. Access by Index\n5. Exit\n";
+        cout << "\nChoose Operation:\n";
+        cout << "1) Insert\n2) Remove\n3) Display\n4) Access by Index\n5) Exit\n6) Load from file\n";
         cin >> choice;
+
+        if (!isValidIntegerInput()) {
+            cout << "Invalid input! Please Enter An Integer.\n";
+            continue;
+        }
 
         switch (choice) {
             case 1:
                 cout << "Enter the value to insert: ";
                 cin >> value;
+                if (!isValidIntegerInput()) {
+                    cout << "Invalid input!\n";
+                    break;
+                }
                 L.insert(value);
                 cout << "List: " << L << endl;
                 break;
@@ -107,6 +125,10 @@ int main() {
             case 2:
                 cout << "Enter the index to remove: ";
                 cin >> index;
+                if (!isValidIntegerInput()) {
+                    cout << "Invalid input!\n";
+                    break;
+                }
                 L.remove(index);
                 cout << "List: " << L << endl;
                 break;
@@ -118,18 +140,40 @@ int main() {
             case 4:
                 cout << "Enter the index to access: ";
                 cin >> index;
+                if (!isValidIntegerInput()) {
+                    cout << "Invalid input!\n";
+                    break;
+                }
                 try {
-                    cout << "Element at the index " << index << " is: " << L[index] << endl;
+                    cout << "Element at index " << index << " is: " << L[index] << endl;
                 } catch (const out_of_range& e) {
-                    cout << "\nError: " << e.what() << endl;
+                    cout << "Error: " << e.what() << endl;
                 }
                 break;
 
             case 5:
                 return 0;
 
+            case 6: {
+                string filename;
+                cout << "Enter filename (Like: \"listdata.txt\"): ";
+                cin >> filename;
+                ifstream infile(filename);
+                if (!infile) {
+                    cout << "Error: Could not open file.\n";
+                    break;
+                }
+
+                int num;
+                while (infile >> num) {
+                    L.insert(num);
+                }
+                cout << "Values inserted from file. Current list: " << L << endl;
+                break;
+            }
+
             default:
-                cout << "Invalid choice, Please Try again!" << endl;
+                cout << "Invalid choice, please try again!" << endl;
         }
     }
 }
