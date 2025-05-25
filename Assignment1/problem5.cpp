@@ -1,23 +1,27 @@
 #include <iostream>
+#include <fstream>
 using namespace std;
+
 class StatisticalCalculation {
 private:
-    int*numbers;
+    int* numbers;
     int size;
-void bubbleSort() {
-    for (int i = 0; i < size - 1; i++) {
-        for (int j = 0; j < size - i - 1; j++) {
-            if (numbers[j] > numbers[j + 1]) {
+
+    void bubbleSort() {
+        for (int i = 0; i < size - 1; i++) {
+            for (int j = 0; j < size - i - 1; j++) {
+                if (numbers[j] > numbers[j + 1]) {
                     swap(numbers[j], numbers[j + 1]);
+                }
             }
         }
     }
-}
+
 public:
-    StatisticalCalculation(int arr[],int n){
-    size=n;
-    numbers=new int[size];
-     for (int i = 0; i < size; i++)
+    StatisticalCalculation(int arr[], int n) {
+        size = n;
+        numbers = new int[size];
+        for (int i = 0; i < size; i++)
             numbers[i] = arr[i];
         bubbleSort();
     }
@@ -54,8 +58,9 @@ public:
             sum += numbers[i];
         return sum;
     }
-    };
-    bool isValidIntegerInput() {
+};
+
+bool isValidIntegerInput() {
     if (cin.fail()) {
         cin.clear();
         cin.ignore(10000, '\n');
@@ -63,60 +68,111 @@ public:
     }
     return true;
 }
-int main()
-{
-    int n;
 
-    // Input validation for number of elements
+int main() {
     while (true) {
-        cout << "Enter the number of elements: ";
-        cin >> n;
-        if (!isValidIntegerInput() || n <= 0) {
-            cout << "Invalid input! Please enter a positive integer.\n";
-        } else {
+        cout << "\nChoose input method:\n";
+        cout << "1. Manual entry\n";
+        cout << "2. Load from file\n";
+        cout << "3. Exit\n";
+        cout << "Enter your choice (1/2/3): ";
+
+        int inputChoice;
+        cin >> inputChoice;
+
+        if (!isValidIntegerInput() || inputChoice < 1 || inputChoice > 3) {
+            cout << "Invalid choice!\n";
+            continue;
+        }
+
+        if (inputChoice == 3) {
+            cout << "Exiting program...\n";
             break;
         }
-    }
 
-    int* arr = new int[n];
+        int n;
+        int* arr = nullptr;
 
-    // Input validation for elements
-    for (int i = 0; i < n; i++) {
-        while (true) {
-            cout << "Enter element " << i + 1 << ": ";
-            cin >> arr[i];
-            if (!isValidIntegerInput()) {
-                cout << "Invalid input! Please enter an integer.\n";
-            } else {
-                break;
+        if (inputChoice == 1) {
+            // Manual Entry
+            while (true) {
+                cout << "Enter the number of elements: ";
+                cin >> n;
+                if (!isValidIntegerInput() || n <= 0) {
+                    cout << "Invalid input! Please enter a positive integer.\n";
+                } else {
+                    break;
+                }
             }
+
+            arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                while (true) {
+                    cout << "Enter element " << i + 1 << ": ";
+                    cin >> arr[i];
+                    if (!isValidIntegerInput()) {
+                        cout << "Invalid input! Please enter an integer.\n";
+                    } else {
+                        break;
+                    }
+                }
+            }
+        } else if (inputChoice == 2) {
+            // File Input
+            string filename;
+            cout << "Enter filename (e.g., data.txt): ";
+            cin >> filename;
+
+            ifstream file(filename);
+            if (!file) {
+                cout << "Error: Could not open file.\n";
+                continue;
+            }
+
+            file >> n;
+            if (!file || n <= 0) {
+                cout << "Invalid number of elements in file.\n";
+                continue;
+            }
+
+            arr = new int[n];
+            for (int i = 0; i < n; i++) {
+                file >> arr[i];
+                if (!file) {
+                    cout << "Error reading data from file.\n";
+                    delete[] arr;
+                    arr = nullptr;
+                    break;
+                }
+            }
+
+            if (arr == nullptr) continue;
         }
-    }
 
-    StatisticalCalculation stats(arr, n);
-    delete[] arr;
+        StatisticalCalculation stats(arr, n);
+        delete[] arr;
 
-    while (true) {
-        cout << "\nSelect a statistical calculation:\n";
-        cout << "1. Find Median\n2. Find Minimum\n3. Find Maximum\n4. Find Mean\n5. Find Summation\n";
-        cout << "Enter your choice (1-5): ";
-
-        int choice;
         while (true) {
+            cout << "\nSelect a statistical calculation:\n";
+            cout << "1. Find Median\n2. Find Minimum\n3. Find Maximum\n4. Find Mean\n5. Find Summation\n6. Back to Main Menu\n";
+            cout << "Enter your choice (1-6): ";
+
+            int choice;
             cin >> choice;
-            if (!isValidIntegerInput() || choice < 1 || choice > 5) {
-                cout << "Invalid choice! Please enter a number between 1 and 5: ";
-            } else {
-                break;
+            if (!isValidIntegerInput() || choice < 1 || choice > 6) {
+                cout << "Invalid choice! Please enter a number between 1 and 6.\n";
+                continue;
             }
-        }
 
-        switch (choice) {
-            case 1: cout << "Median: " << stats.findMedian() << endl; break;
-            case 2: cout << "Minimum: " << stats.findMinimum() << endl; break;
-            case 3: cout << "Maximum: " << stats.findMaximum() << endl; break;
-            case 4: cout << "Mean: " << stats.findMean() << endl; break;
-            case 5: cout << "Summation: " << stats.findSummation() << endl; break;
+            if (choice == 6) break;
+
+            switch (choice) {
+                case 1: cout << "Median: " << stats.findMedian() << endl; break;
+                case 2: cout << "Minimum: " << stats.findMinimum() << endl; break;
+                case 3: cout << "Maximum: " << stats.findMaximum() << endl; break;
+                case 4: cout << "Mean: " << stats.findMean() << endl; break;
+                case 5: cout << "Summation: " << stats.findSummation() << endl; break;
+            }
         }
     }
 
